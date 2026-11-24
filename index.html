@@ -1,0 +1,2753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Block-3 IV</title>
+  <style>
+    :root {
+      --bg-dark: #0b0e17;
+      --bg-panel: #141a2b;
+      --bg-card: #1c243b;
+      --border-glow: #2f3e66;
+      --accent: #38bdf8;
+      --accent-2: #a855f7;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --text-main: #f1f5f9;
+      --text-dim: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #172038 0%, var(--bg-dark) 75%);
+      color: var(--text-main);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    header {
+      width: 100%;
+      max-width: 1100px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #38bdf8, #c084fc, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 24px rgba(56, 189, 248, 0.3);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-glow);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 0.9rem;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+      background: #24304f;
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, #0284c7, #7c3aed);
+      border: none;
+      color: #fff;
+    }
+
+    button.primary:hover {
+      filter: brightness(1.12);
+    }
+
+    /* Main Menu & Mode Containers */
+    #app-container {
+      width: 100%;
+      max-width: 1100px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .screen {
+      display: none;
+      width: 100%;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Menu Grid */
+    .menu-hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .menu-hero h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+    }
+
+    .menu-hero p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .mode-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-glow);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .mode-card h3 {
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+
+    .mode-card p {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.45;
+    }
+
+    .course-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .course-btn {
+      padding: 8px 6px;
+      font-size: 0.82rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .course-btn:hover {
+      border-color: var(--accent-2);
+      background: #281f47;
+    }
+
+    .controls-legend {
+      margin-top: 24px;
+      background: rgba(20, 26, 43, 0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px 24px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .key-badge {
+      display: inline-block;
+      background: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 5px;
+      padding: 2px 7px;
+      color: #f8fafc;
+      font-family: monospace;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    /* Game Arena Layout */
+    .arena-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 24px;
+      width: 100%;
+    }
+
+    .player-station {
+      display: flex;
+      gap: 12px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 14px;
+      position: relative;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .board-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .station-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .garbage-tray {
+      width: 100%;
+      height: 24px;
+      background: #0b0f19;
+      border: 1px solid #283556;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 4px;
+      overflow: hidden;
+    }
+
+    .garbage-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .garbage-icon.small { background: #94a3b8; }
+    .garbage-icon.rock { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+    .garbage-icon.crown { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+
+    .canvas-frame {
+      position: relative;
+      border: 2px solid #334155;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #080b12;
+    }
+
+    canvas.game-board {
+      display: block;
+    }
+
+    /* Warning Banner */
+    .warning-banner {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(220, 38, 38, 0.92);
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: 2px;
+      padding: 4px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      border: 1px solid #fca5a5;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 10;
+      animation: pulseWarn 0.6s infinite alternate;
+    }
+
+    .warning-banner.visible {
+      opacity: 1;
+    }
+
+    @keyframes pulseWarn {
+      from { transform: translateX(-50%) scale(0.96); }
+      to { transform: translateX(-50%) scale(1.04); }
+    }
+
+    /* Side Panel (Next Previews & Stats) */
+    .side-hud {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 112px;
+      gap: 10px;
+    }
+
+    .hud-box {
+      background: var(--bg-card);
+      border: 1px solid #2b385c;
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .hud-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .hud-value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .preview-canvas {
+      display: block;
+      margin: 0 auto;
+      background: #0b0f19;
+      border-radius: 6px;
+    }
+
+    /* Overlay Message Box inside Board */
+    .board-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 11, 18, 0.86);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px;
+      z-index: 20;
+    }
+
+    .board-overlay.active {
+      display: flex;
+    }
+
+    .board-overlay h2 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .board-overlay p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+
+    /* Mobile Touch Pad */
+    .touch-controls {
+      display: none;
+      width: 100%;
+      max-width: 460px;
+      margin-top: 14px;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 820px), (pointer: coarse) {
+      .touch-controls {
+        display: flex;
+      }
+    }
+
+    .touch-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .touch-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid #475569;
+      touch-action: manipulation;
+    }
+
+    .touch-btn:active {
+      background: var(--accent);
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">BLOCK-3 IV</div>
+    <div class="header-actions">
+      <button id="btn-sound" title="Toggle Audio">🔊 SFX: ON</button>
+      <button id="btn-menu" style="display:none;">🏠 Main Menu</button>
+    </div>
+  </header>
+
+  <div id="app-container">
+    <!-- MAIN MENU DIV -->
+    <div id="screen-menu" class="screen active">
+      <div class="menu-hero">
+        <h1>BLOCK-3 IV</h1>
+        <p>Match 3 or more blocks horizontally, vertically, or diagonally across a 6×13 grid!</p>
+      </div>
+
+      <div class="mode-grid">
+        <div class="mode-card">
+          <div>
+            <h3>♾️ Endless Mode</h3>
+            <p>Survive as long as possible as gravity steadily accelerates. Watch out for the 48-block danger threshold!</p>
+          </div>
+          <button class="primary" data-start-mode="endless">Play Endless</button>
+        </div>
+
+        <div class="mode-card">
+          <div>
+            <h3>⏱️ 5-Minute Trial</h3>
+            <p>Race against a 5:00 clock to build massive 8-way chains and achieve the highest possible score.</p>
+          </div>
+          <button class="primary" data-start-mode="trial5">Start 5-Min Trial</button>
+        </div>
+
+        <div class="mode-card">
+          <div>
+            <h3>⛓️ 8-Chain Trial</h3>
+            <p>Trigger an 8-chain (or higher) combo as fast as you can. Precision planning meets speed!</p>
+          </div>
+          <button class="primary" data-start-mode="chain8">Start 8-Chain Trial</button>
+        </div>
+
+        <div class="mode-card">
+          <div>
+            <h3>⚔️ VS CPU Courses</h3>
+            <p>Battle through 4-stage courses with score carry-over and garbage scaling.</p>
+          </div>
+          <div class="course-selector" id="course-list-container">
+            <!-- Populated dynamically from COURSE_DEFINITIONS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-legend">
+        <div><span class="key-badge">←</span><span class="key-badge">→</span> Move</div>
+        <div><span class="key-badge">↓</span> Soft Drop</div>
+        <div><span class="key-badge">Space</span> Hard Drop</div>
+        <div><span class="key-badge">Z</span> Rotate CW</div>
+        <div><span class="key-badge">X</span> Rotate CCW</div>
+        <div><span class="key-badge">C</span> Rotate 180°</div>
+      </div>
+    </div>
+
+    <!-- MODE CONTAINERS (Each mode binds to its own dedicated HTML div) -->
+    <div id="mode-endless-container" class="screen"></div>
+    <div id="mode-trial5-container" class="screen"></div>
+    <div id="mode-chain8-container" class="screen"></div>
+    <div id="mode-vscpu-container" class="screen"></div>
+
+    <!-- RESPONSIVE TOUCH CONTROLS -->
+    <div class="touch-controls" id="touch-controls">
+      <div class="touch-group">
+        <button class="touch-btn" data-key="ArrowLeft">◀</button>
+        <button class="touch-btn" data-key="ArrowDown">▼</button>
+        <button class="touch-btn" data-key="ArrowRight">▶</button>
+      </div>
+      <div class="touch-group">
+        <button class="touch-btn" data-key="KeyX">↺</button>
+        <button class="touch-btn" data-key="KeyZ">↻</button>
+        <button class="touch-btn" data-key="KeyC">180</button>
+        <button class="touch-btn" data-key="Space">⬇</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * AUDIO SYNTHESIZER (Zero external assets required)
+     * =========================================================================
+     */
+    class SoundFX {
+      constructor() {
+        this.enabled = true;
+        this.ctx = null;
+      }
+      ensureContext() {
+        if (!this.ctx && this.enabled) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playTone(freq, type = 'sine', duration = 0.08, gainVal = 0.12, slideTo = null) {
+        if (!this.enabled) return;
+        this.ensureContext();
+        if (!this.ctx) return;
+
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        if (slideTo) {
+          osc.frequency.exponentialRampToValueAtTime(slideTo, now + duration);
+        }
+        gain.gain.setValueAtTime(gainVal, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + duration);
+      }
+      move() { this.playTone(260, 'triangle', 0.04, 0.07); }
+      rotate() { this.playTone(380, 'sine', 0.06, 0.09, 480); }
+      drop() { this.playTone(150, 'square', 0.09, 0.08, 70); }
+      chain(step) {
+        const base = 320 + Math.min(step, 12) * 65;
+        this.playTone(base, 'triangle', 0.18, 0.16, base * 1.25);
+      }
+      garbage() { this.playTone(110, 'sawtooth', 0.22, 0.12, 55); }
+      win() {
+        [523, 659, 784, 1046].forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 'triangle', 0.18, 0.14), i * 90);
+        });
+      }
+      lose() {
+        [300, 250, 200, 140].forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 'sawtooth', 0.22, 0.12), i * 110);
+        });
+      }
+    }
+
+    const SFX = new SoundFX();
+
+    /**
+     * =========================================================================
+     * CONSTANTS & COLOR PALETTE (5 Colors + Garbage Type)
+     * =========================================================================
+     */
+    const COLS = 6;
+    const ROWS = 13; // Visible 6x13 grid
+    const HIDDEN_ROWS = 1; // Top buffer row for spawning/rotation
+    const TOTAL_ROWS = ROWS + HIDDEN_ROWS;
+
+    const BLOCK_COLORS = {
+      1: { name: 'Ruby',    main: '#ef4444', light: '#fca5a5', dark: '#991b1b', symbol: '◆' },
+      2: { name: 'Sapphire',main: '#3b82f6', light: '#93c5fd', dark: '#1e40af', symbol: '●' },
+      3: { name: 'Emerald', main: '#10b981', light: '#6ee7b7', dark: '#065f46', symbol: '▲' },
+      4: { name: 'Topaz',   main: '#f59e0b', light: '#fde68a', dark: '#92400e', symbol: '★' },
+      5: { name: 'Amethyst',main: '#a855f7', light: '#d8b4fe', dark: '#581c87', symbol: '⬢' },
+      9: { name: 'Garbage', main: '#64748b', light: '#cbd5e1', dark: '#334155', symbol: '✕' }
+    };
+
+    // Orientation offsets for secondary (satellite) block relative to pivot block:
+    // 0: Up (0, -1), 1: Right (1, 0), 2: Down (0, 1), 3: Left (-1, 0)
+    const ORIENTATION_OFFSETS = [
+      { dx: 0, dy: -1 },
+      { dx: 1, dy: 0 },
+      { dx: 0, dy: 1 },
+      { dx: -1, dy: 0 }
+    ];
+
+    /**
+     * =========================================================================
+     * CONSTRUCTOR 1: CoreGameEngine
+     * Handles the 6x13 board, 5-color piece generation, previews, controls,
+     * 8-directional match-3 detection, chain resolution, and 48/36 WARNING state.
+     * =========================================================================
+     */
+    function CoreGameEngine(containerElement, options = {}) {
+      this.container = containerElement;
+      this.label = options.label || 'PLAYER';
+      this.cellSize = options.cellSize || 34;
+      this.isCPU = Boolean(options.isCPU);
+      this.baseDropInterval = options.dropInterval || 850;
+      this.dropInterval = this.baseDropInterval;
+      this.seedRng = options.rng || Math.random;
+
+      // Callbacks for Modes, GarbageScaling, and CPUEngine
+      this.onChainComplete = options.onChainComplete || null;
+      this.onPieceLocked = options.onPieceLocked || null;
+      this.onGameOver = options.onGameOver || null;
+      this.onPieceSpawned = options.onPieceSpawned || null;
+
+      // Board state: grid[r][c] where r=0 is hidden spawn row, r=1..13 are visible 13 rows
+      this.grid = this.createEmptyGrid();
+
+      // Active falling pair: pivot (x, y, color) + satellite offset by orientation (0..3)
+      this.activePiece = null;
+      this.nextQueue = [];
+
+      // Status & Counters
+      this.score = options.initialScore || 0;
+      this.chainCount = 0;
+      this.maxChainReached = 0;
+      this.blocksClearedTotal = 0;
+      this.warningActive = false; // Hysteresis: ON >= 48 blocks, OFF <= 36 blocks
+      this.state = 'IDLE'; // IDLE, FALLING, RESOLVING, GAMEOVER, PAUSED
+
+      // Timers & Animation state
+      this.dropAccumulator = 0;
+      this.resolveTimer = 0;
+      this.resolvePhase = 'NONE'; // GRAVITY, FLASH, CLEAR
+      this.matchedCells = [];
+      this.particles = [];
+      this.floatingTexts = [];
+      this.pendingGarbageRef = null; // Linked GarbageScaling instance
+
+      this.buildDOM();
+      this.initQueue();
+    }
+
+    CoreGameEngine.prototype.createEmptyGrid = function() {
+      return Array.from({ length: TOTAL_ROWS }, () => Array(COLS).fill(0));
+    };
+
+    CoreGameEngine.prototype.buildDOM = function() {
+      const w = COLS * this.cellSize;
+      const h = ROWS * this.cellSize;
+
+      this.container.innerHTML = `
+        <div class="player-station">
+          <div class="board-column">
+            <div class="station-header">
+              <span class="station-name">${this.label}</span>
+              <span class="station-blocks" style="font-size:0.8rem;color:#94a3b8;">Blocks: 0/78</span>
+            </div>
+            <div class="garbage-tray" title="Incoming Garbage Queue"></div>
+            <div class="canvas-frame" style="width:${w}px;height:${h}px;">
+              <div class="warning-banner">⚠ WARNING ⚠</div>
+              <canvas class="game-board" width="${w}" height="${h}"></canvas>
+              <div class="board-overlay">
+                <h2 class="overlay-title"></h2>
+                <p class="overlay-msg"></p>
+              </div>
+            </div>
+          </div>
+          <div class="side-hud">
+            <div class="hud-box">
+              <div class="hud-label">NEXT</div>
+              <canvas class="preview-canvas next-1" width="76" height="76"></canvas>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">NEXT +1</div>
+              <canvas class="preview-canvas next-2" width="64" height="64"></canvas>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">SCORE</div>
+              <div class="hud-value hud-score">0</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">CHAIN</div>
+              <div class="hud-value hud-chain" style="color:#38bdf8;">0</div>
+            </div>
+            <div class="hud-box hud-extra-box" style="display:none;">
+              <div class="hud-label hud-extra-label">INFO</div>
+              <div class="hud-value hud-extra-value">-</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      this.canvas = this.container.querySelector('.game-board');
+      this.ctx = this.canvas.getContext('2d');
+      this.preview1Ctx = this.container.querySelector('.next-1').getContext('2d');
+      this.preview2Ctx = this.container.querySelector('.next-2').getContext('2d');
+      this.warningEl = this.container.querySelector('.warning-banner');
+      this.garbageTrayEl = this.container.querySelector('.garbage-tray');
+      this.scoreEl = this.container.querySelector('.hud-score');
+      this.chainEl = this.container.querySelector('.hud-chain');
+      this.blocksEl = this.container.querySelector('.station-blocks');
+      this.overlayEl = this.container.querySelector('.board-overlay');
+      this.overlayTitleEl = this.container.querySelector('.overlay-title');
+      this.overlayMsgEl = this.container.querySelector('.overlay-msg');
+      this.extraBoxEl = this.container.querySelector('.hud-extra-box');
+      this.extraLabelEl = this.container.querySelector('.hud-extra-label');
+      this.extraValueEl = this.container.querySelector('.hud-extra-value');
+    };
+
+    CoreGameEngine.prototype.setExtraHud = function(label, value) {
+      this.extraBoxEl.style.display = 'block';
+      this.extraLabelEl.textContent = label;
+      this.extraValueEl.textContent = value;
+    };
+
+    CoreGameEngine.prototype.randomColor = function() {
+      return Math.floor(this.seedRng() * 5) + 1;
+    };
+
+    CoreGameEngine.prototype.generatePair = function() {
+      return {
+        pivotColor: this.randomColor(),
+        subColor: this.randomColor()
+      };
+    };
+
+    CoreGameEngine.prototype.initQueue = function() {
+      this.nextQueue = [this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair(), this.generatePair()];
+      this.renderPreviews();
+    };
+
+    CoreGameEngine.prototype.reset = function(keepScore = false) {
+      this.grid = this.createEmptyGrid();
+      if (!keepScore) this.score = 0;
+      this.chainCount = 0;
+      this.maxChainReached = 0;
+      this.blocksClearedTotal = 0;
+      this.warningActive = false;
+      this.warningEl.classList.remove('visible');
+      this.particles = [];
+      this.floatingTexts = [];
+      this.matchedCells = [];
+      this.dropAccumulator = 0;
+      this.dropInterval = this.baseDropInterval;
+      this.hideOverlay();
+      this.initQueue();
+      this.updateHUD();
+      this.spawnPiece();
+    };
+
+    CoreGameEngine.prototype.showOverlay = function(title, msg) {
+      this.overlayTitleEl.textContent = title;
+      this.overlayMsgEl.textContent = msg;
+      this.overlayEl.classList.add('active');
+    };
+
+    CoreGameEngine.prototype.hideOverlay = function() {
+      this.overlayEl.classList.remove('active');
+    };
+
+    CoreGameEngine.prototype.countBoardBlocks = function() {
+      let count = 0;
+      for (let r = HIDDEN_ROWS; r < TOTAL_ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (this.grid[r][c] !== 0) count++;
+        }
+      }
+      return count;
+    };
+
+    CoreGameEngine.prototype.evaluateWarningState = function() {
+      const count = this.countBoardBlocks();
+      this.blocksEl.textContent = `Blocks: ${count}/${COLS * ROWS}`;
+
+      // Hysteresis requirement:
+      // Appears if >= 48 blocks at the same time; disappears ONLY when reduced to <= 36 blocks.
+      if (!this.warningActive && count >= 48) {
+        this.warningActive = true;
+        this.warningEl.classList.add('visible');
+      } else if (this.warningActive && count <= 36) {
+        this.warningActive = false;
+        this.warningEl.classList.remove('visible');
+      }
+    };
+
+    CoreGameEngine.prototype.spawnPiece = function() {
+      // Check top-out condition on spawn column (col 2, row 1 - top visible row)
+      if (this.grid[1][2] !== 0) {
+        this.triggerGameOver();
+        return;
+      }
+
+      const next = this.nextQueue.shift();
+      this.nextQueue.push(this.generatePair());
+      this.renderPreviews();
+
+      this.activePiece = {
+        x: 2,
+        y: 1,
+        orientation: 0, // Satellite starts directly above pivot (y = 0)
+        pivotColor: next.pivotColor,
+        subColor: next.subColor
+      };
+
+      this.chainCount = 0;
+      this.dropAccumulator = 0;
+      this.state = 'FALLING';
+      this.updateHUD();
+
+      if (this.onPieceSpawned) {
+        this.onPieceSpawned(this.activePiece);
+      }
+    };
+
+    CoreGameEngine.prototype.getPieceCells = function(piece = this.activePiece) {
+      if (!piece) return [];
+      const off = ORIENTATION_OFFSETS[piece.orientation];
+      return [
+        { x: piece.x, y: piece.y, color: piece.pivotColor, isPivot: true },
+        { x: piece.x + off.dx, y: piece.y + off.dy, color: piece.subColor, isPivot: false }
+      ];
+    };
+
+    CoreGameEngine.prototype.isValidPosition = function(x, y, orientation) {
+      const off = ORIENTATION_OFFSETS[orientation];
+      const cells = [
+        { cx: x, cy: y },
+        { cx: x + off.dx, cy: y + off.dy }
+      ];
+      for (const cell of cells) {
+        if (cell.cx < 0 || cell.cx >= COLS || cell.cy < 0 || cell.cy >= TOTAL_ROWS) {
+          return false;
+        }
+        if (this.grid[cell.cy][cell.cx] !== 0) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    CoreGameEngine.prototype.moveHorizontal = function(dir) {
+      if (this.state !== 'FALLING' || !this.activePiece) return false;
+      if (this.isValidPosition(this.activePiece.x + dir, this.activePiece.y, this.activePiece.orientation)) {
+        this.activePiece.x += dir;
+        if (!this.isCPU) SFX.move();
+        return true;
+      }
+      return false;
+    };
+
+    CoreGameEngine.prototype.rotate = function(delta) {
+      if (this.state !== 'FALLING' || !this.activePiece) return false;
+      const newOri = (this.activePiece.orientation + delta + 4) % 4;
+
+      // Standard wall/floor kicks + 180 flip swap kick
+      const kicks = [
+        { kx: 0, ky: 0 },
+        { kx: -1, ky: 0 },
+        { kx: 1, ky: 0 },
+        { kx: 0, ky: -1 },
+        { kx: -1, ky: -1 },
+        { kx: 1, ky: -1 }
+      ];
+
+      for (const k of kicks) {
+        if (this.isValidPosition(this.activePiece.x + k.kx, this.activePiece.y + k.ky, newOri)) {
+          this.activePiece.x += k.kx;
+          this.activePiece.y += k.ky;
+          this.activePiece.orientation = newOri;
+          if (!this.isCPU) SFX.rotate();
+          return true;
+        }
+      }
+
+      // If squeezed vertically (e.g. 180 rotation in tight 1-wide column), swap pivot & sub colors
+      if (delta === 2) {
+        const tmp = this.activePiece.pivotColor;
+        this.activePiece.pivotColor = this.activePiece.subColor;
+        this.activePiece.subColor = tmp;
+        if (!this.isCPU) SFX.rotate();
+        return true;
+      }
+      return false;
+    };
+
+    CoreGameEngine.prototype.softDrop = function() {
+      if (this.state !== 'FALLING' || !this.activePiece) return false;
+      if (this.isValidPosition(this.activePiece.x, this.activePiece.y + 1, this.activePiece.orientation)) {
+        this.activePiece.y += 1;
+        this.score += 1;
+        this.dropAccumulator = 0;
+        this.updateHUD();
+        return true;
+      } else {
+        this.lockPiece();
+        return false;
+      }
+    };
+
+    CoreGameEngine.prototype.hardDrop = function() {
+      if (this.state !== 'FALLING' || !this.activePiece) return;
+      let droppedRows = 0;
+      while (this.isValidPosition(this.activePiece.x, this.activePiece.y + 1, this.activePiece.orientation)) {
+        this.activePiece.y += 1;
+        droppedRows++;
+      }
+      this.score += droppedRows * 2;
+      if (!this.isCPU) SFX.drop();
+      this.updateHUD();
+      this.lockPiece();
+    };
+
+    CoreGameEngine.prototype.getGhostY = function() {
+      if (!this.activePiece) return 0;
+      let gy = this.activePiece.y;
+      while (this.isValidPosition(this.activePiece.x, gy + 1, this.activePiece.orientation)) {
+        gy++;
+      }
+      return gy;
+    };
+
+    CoreGameEngine.prototype.lockPiece = function() {
+      if (!this.activePiece) return;
+      const cells = this.getPieceCells();
+      for (const c of cells) {
+        if (c.y >= 0 && c.y < TOTAL_ROWS && c.x >= 0 && c.x < COLS) {
+          this.grid[c.y][c.x] = c.color;
+        }
+      }
+      this.activePiece = null;
+      this.applyGravityImmediate();
+      this.evaluateWarningState();
+
+      if (this.onPieceLocked) {
+        this.onPieceLocked();
+      }
+
+      this.beginChainResolution();
+    };
+
+    CoreGameEngine.prototype.applyGravityImmediate = function() {
+      let moved = false;
+      for (let c = 0; c < COLS; c++) {
+        let writeRow = TOTAL_ROWS - 1;
+        for (let r = TOTAL_ROWS - 1; r >= 0; r--) {
+          if (this.grid[r][c] !== 0) {
+            if (r !== writeRow) {
+              this.grid[writeRow][c] = this.grid[r][c];
+              this.grid[r][c] = 0;
+              moved = true;
+            }
+            writeRow--;
+          }
+        }
+      }
+      return moved;
+    };
+
+    /**
+     * Columns III style 8-directional match-3 detection:
+     * Checks Horizontal (1,0), Vertical (0,1), Diagonal Down-Right (1,1), Diagonal Up-Right (1,-1)
+     */
+    CoreGameEngine.prototype.findMatches = function(boardGrid = this.grid) {
+      const toClear = new Set();
+      const directions = [
+        { dr: 0, dc: 1 },  // Horizontal
+        { dr: 1, dc: 0 },  // Vertical
+        { dr: 1, dc: 1 },  // Diagonal \
+        { dr: -1, dc: 1 }  // Diagonal /
+      ];
+
+      for (let r = 0; r < TOTAL_ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const color = boardGrid[r][c];
+          if (color === 0 || color === 9) continue; // Ignore empty & garbage blocks
+
+          for (const { dr, dc } of directions) {
+            const line = [{ r, c }];
+            let nr = r + dr;
+            let nc = c + dc;
+            while (
+              nr >= 0 && nr < TOTAL_ROWS &&
+              nc >= 0 && nc < COLS &&
+              boardGrid[nr][nc] === color
+            ) {
+              line.push({ r: nr, c: nc });
+              nr += dr;
+              nc += dc;
+            }
+            if (line.length >= 3) {
+              for (const cell of line) {
+                toClear.add(`${cell.r},${cell.c}`);
+              }
+            }
+          }
+        }
+      }
+
+      // Adjacent Garbage blocks (color === 9) shatter when neighboring colored blocks clear
+      const garbageToClear = new Set();
+      const orth = [[-1,0],[1,0],[0,-1],[0,1]];
+      for (const key of toClear) {
+        const [r, c] = key.split(',').map(Number);
+        for (const [dr, dc] of orth) {
+          const nr = r + dr;
+          const nc = c + dc;
+          if (nr >= 0 && nr < TOTAL_ROWS && nc >= 0 && nc < COLS && boardGrid[nr][nc] === 9) {
+            garbageToClear.add(`${nr},${nc}`);
+          }
+        }
+      }
+
+      const result = [];
+      for (const key of toClear) {
+        const [r, c] = key.split(',').map(Number);
+        result.push({ r, c, isGarbage: false });
+      }
+      for (const key of garbageToClear) {
+        const [r, c] = key.split(',').map(Number);
+        result.push({ r, c, isGarbage: true });
+      }
+      return result;
+    };
+
+    CoreGameEngine.prototype.beginChainResolution = function() {
+      const matches = this.findMatches();
+      if (matches.length > 0) {
+        this.chainCount++;
+        if (this.chainCount > this.maxChainReached) {
+          this.maxChainReached = this.chainCount;
+        }
+        this.matchedCells = matches;
+        this.state = 'RESOLVING';
+        this.resolvePhase = 'FLASH';
+        this.resolveTimer = 260; // ms flash before pop
+        if (!this.isCPU) SFX.chain(this.chainCount);
+        this.updateHUD();
+      } else {
+        this.finishTurn();
+      }
+    };
+
+    CoreGameEngine.prototype.executeClearAndGravity = function() {
+      let coloredCleared = 0;
+      const colorsInvolved = new Set();
+
+      for (const cell of this.matchedCells) {
+        const val = this.grid[cell.r][cell.c];
+        if (val > 0 && val !== 9) {
+          coloredCleared++;
+          colorsInvolved.add(val);
+        }
+        this.spawnBurstParticles(cell.c, cell.r - HIDDEN_ROWS, val || 1);
+        this.grid[cell.r][cell.c] = 0;
+      }
+
+      this.blocksClearedTotal += coloredCleared;
+
+      // Score formula: base * blocks * chain multiplier * color bonus
+      const chainPower = Math.pow(2, this.chainCount - 1);
+      const colorBonus = colorsInvolved.size > 1 ? colorsInvolved.size * 1.5 : 1;
+      const gained = Math.round(coloredCleared * 30 * chainPower * colorBonus);
+      this.score += gained;
+
+      if (this.matchedCells.length > 0) {
+        const anchor = this.matchedCells[0];
+        this.floatingTexts.push({
+          x: (anchor.c + 0.5) * this.cellSize,
+          y: Math.max(24, (anchor.r - HIDDEN_ROWS + 0.5) * this.cellSize),
+          text: this.chainCount > 1 ? `${this.chainCount} CHAIN! +${gained}` : `+${gained}`,
+          life: 900,
+          maxLife: 900
+        });
+      }
+
+      this.matchedCells = [];
+      this.applyGravityImmediate();
+      this.evaluateWarningState();
+      this.updateHUD();
+
+      // Check for cascading chains
+      const nextMatches = this.findMatches();
+      if (nextMatches.length > 0) {
+        this.chainCount++;
+        if (this.chainCount > this.maxChainReached) {
+          this.maxChainReached = this.chainCount;
+        }
+        this.matchedCells = nextMatches;
+        this.resolvePhase = 'FLASH';
+        this.resolveTimer = 240;
+        if (!this.isCPU) SFX.chain(this.chainCount);
+        this.updateHUD();
+      } else {
+        this.finishTurn();
+      }
+    };
+
+    CoreGameEngine.prototype.finishTurn = function() {
+      const completedChain = this.chainCount;
+      const turnScore = this.score;
+
+      if (this.onChainComplete) {
+        this.onChainComplete({
+          chainCount: completedChain,
+          maxChain: this.maxChainReached,
+          score: turnScore
+        });
+      }
+
+      // Drop pending garbage if linked to a GarbageScaling system and no chain prevented it
+      if (this.pendingGarbageRef && completedChain === 0) {
+        this.pendingGarbageRef.releasePendingGarbage(this);
+      }
+
+      this.evaluateWarningState();
+
+      if (this.state !== 'GAMEOVER') {
+        this.spawnPiece();
+      }
+    };
+
+    CoreGameEngine.prototype.triggerGameOver = function() {
+      this.state = 'GAMEOVER';
+      this.activePiece = null;
+      if (!this.isCPU) SFX.lose();
+      if (this.onGameOver) {
+        this.onGameOver(this);
+      }
+    };
+
+    CoreGameEngine.prototype.spawnBurstParticles = function(col, visRow, colorId) {
+      const info = BLOCK_COLORS[colorId] || BLOCK_COLORS[1];
+      const cx = (col + 0.5) * this.cellSize;
+      const cy = (visRow + 0.5) * this.cellSize;
+      for (let i = 0; i < 8; i++) {
+        const angle = (Math.PI * 2 * i) / 8 + Math.random() * 0.4;
+        const speed = 1.5 + Math.random() * 2.5;
+        this.particles.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          color: info.light,
+          life: 400
+        });
+      }
+    };
+
+    CoreGameEngine.prototype.updateHUD = function() {
+      this.scoreEl.textContent = this.score.toLocaleString();
+      this.chainEl.textContent = this.chainCount > 0 ? `${this.chainCount}x` : `${this.maxChainReached} max`;
+    };
+
+    CoreGameEngine.prototype.update = function(dt) {
+      // Update particles & floating texts regardless of game state
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= dt;
+        if (p.life <= 0) this.particles.splice(i, 1);
+      }
+      for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+        const ft = this.floatingTexts[i];
+        ft.y -= 0.035 * dt;
+        ft.life -= dt;
+        if (ft.life <= 0) this.floatingTexts.splice(i, 1);
+      }
+
+      if (this.state === 'FALLING' && this.activePiece) {
+        this.dropAccumulator += dt;
+        if (this.dropAccumulator >= this.dropInterval) {
+          this.dropAccumulator = 0;
+          if (this.isValidPosition(this.activePiece.x, this.activePiece.y + 1, this.activePiece.orientation)) {
+            this.activePiece.y += 1;
+          } else {
+            this.lockPiece();
+          }
+        }
+      } else if (this.state === 'RESOLVING') {
+        this.resolveTimer -= dt;
+        if (this.resolveTimer <= 0) {
+          this.executeClearAndGravity();
+        }
+      }
+    };
+
+    CoreGameEngine.prototype.drawBlock = function(ctx, x, y, size, colorId, alpha = 1, flash = false) {
+      const info = BLOCK_COLORS[colorId];
+      if (!info) return;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      const pad = 2;
+      const bx = x + pad;
+      const by = y + pad;
+      const bs = size - pad * 2;
+      const r = 7;
+
+      // Jewel body gradient
+      const grad = ctx.createLinearGradient(bx, by, bx + bs, by + bs);
+      grad.addColorStop(0, flash ? '#ffffff' : info.light);
+      grad.addColorStop(0.45, flash ? '#fef08a' : info.main);
+      grad.addColorStop(1, info.dark);
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.roundRect(bx, by, bs, bs, r);
+      ctx.fill();
+
+      // Inner bevel highlight
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Colorblind-friendly geometric emblem
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = `bold ${Math.floor(size * 0.42)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(info.symbol, x + size / 2, y + size / 2 + 1);
+
+      ctx.restore();
+    };
+
+    CoreGameEngine.prototype.renderPreviews = function() {
+      const drawMini = (ctx, pair, size, canvasW, canvasH) => {
+        ctx.clearRect(0, 0, canvasW, canvasH);
+        if (!pair) return;
+        const cx = (canvasW - size) / 2;
+        const topY = (canvasH - size * 2) / 2;
+        this.drawBlock(ctx, cx, topY, size, pair.subColor);
+        this.drawBlock(ctx, cx, topY + size, size, pair.pivotColor);
+      };
+      drawMini(this.preview1Ctx, this.nextQueue[0], 30, 76, 76);
+      drawMini(this.preview2Ctx, this.nextQueue[1], 24, 64, 64);
+    };
+
+    CoreGameEngine.prototype.render = function() {
+      const ctx = this.ctx;
+      const cs = this.cellSize;
+      const w = COLS * cs;
+      const h = ROWS * cs;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Subtle grid background
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.08)';
+      ctx.lineWidth = 1;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          ctx.strokeRect(c * cs, r * cs, cs, cs);
+        }
+      }
+
+      // Top-out danger marker on column 2 (3rd column), top visible row
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.55)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(2 * cs + 4, 4, cs - 8, cs - 8);
+
+      // Build flash lookup
+      const flashSet = new Set(this.matchedCells.map(m => `${m.r},${m.c}`));
+      const isFlashing = this.state === 'RESOLVING' && Math.floor(this.resolveTimer / 60) % 2 === 0;
+
+      // Draw locked blocks (visible rows 1..13)
+      for (let r = HIDDEN_ROWS; r < TOTAL_ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const val = this.grid[r][c];
+          if (val !== 0) {
+            const flash = flashSet.has(`${r},${c}`) && isFlashing;
+            this.drawBlock(ctx, c * cs, (r - HIDDEN_ROWS) * cs, cs, val, 1, flash);
+          }
+        }
+      }
+
+      // Draw ghost & active falling pair
+      if (this.state === 'FALLING' && this.activePiece) {
+        const ghostY = this.getGhostY();
+        const ghostPiece = { ...this.activePiece, y: ghostY };
+        for (const gc of this.getPieceCells(ghostPiece)) {
+          if (gc.y >= HIDDEN_ROWS) {
+            this.drawBlock(ctx, gc.x * cs, (gc.y - HIDDEN_ROWS) * cs, cs, gc.color, 0.22);
+          }
+        }
+
+        for (const ac of this.getPieceCells(this.activePiece)) {
+          if (ac.y >= HIDDEN_ROWS) {
+            this.drawBlock(ctx, ac.x * cs, (ac.y - HIDDEN_ROWS) * cs, cs, ac.color, 1);
+            if (ac.isPivot) {
+              ctx.strokeStyle = '#ffffff';
+              ctx.lineWidth = 1.5;
+              ctx.strokeRect(ac.x * cs + 5, (ac.y - HIDDEN_ROWS) * cs + 5, cs - 10, cs - 10);
+            }
+          }
+        }
+      }
+
+      // Particles
+      for (const p of this.particles) {
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, p.life / 400);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      // Floating chain/score callouts
+      for (const ft of this.floatingTexts) {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, ft.life / ft.maxLife);
+        ctx.font = '900 15px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#000';
+        ctx.fillText(ft.text, ft.x + 1, ft.y + 1);
+        ctx.fillStyle = '#fde047';
+        ctx.fillText(ft.text, ft.x, ft.y);
+        ctx.restore();
+      }
+    };
+
+    /**
+     * =========================================================================
+     * CONSTRUCTOR 2: GarbageScaling (VS CPU Courses Constructor #1)
+     * Calculates garbage output from chains, handles countering/offsetting,
+     * scales intensity by stage/course, and drops garbage blocks onto boards.
+     * =========================================================================
+     */
+    function GarbageScaling(options = {}) {
+      this.stageMultiplier = options.stageMultiplier || 1.0;
+      this.courseScale = options.courseScale || 1.0;
+      this.pendingForPlayer = 0;
+      this.pendingForCPU = 0;
+    }
+
+    GarbageScaling.prototype.configure = function(courseScale, stageMultiplier) {
+      this.courseScale = courseScale;
+      this.stageMultiplier = stageMultiplier;
+      this.pendingForPlayer = 0;
+      this.pendingForCPU = 0;
+    };
+
+    GarbageScaling.prototype.calculateGarbageAmount = function(chainCount, isFromCPU) {
+      if (chainCount <= 0) return 0;
+      // Exponential chain scaling: 1-chain = 1, 2-chain = 4, 3-chain = 9, 4-chain = 16...
+      const baseGarbage = Math.pow(chainCount, 2);
+      const scale = isFromCPU ? (this.courseScale * this.stageMultiplier) : 1.0;
+      return Math.max(1, Math.round(baseGarbage * scale));
+    };
+
+    GarbageScaling.prototype.sendAttack = function(attackerRole, chainCount, playerEngine, cpuEngine) {
+      const amount = this.calculateGarbageAmount(chainCount, attackerRole === 'CPU');
+      if (amount <= 0) return;
+
+      if (attackerRole === 'PLAYER') {
+        if (this.pendingForPlayer > 0) {
+          const offset = Math.min(this.pendingForPlayer, amount);
+          this.pendingForPlayer -= offset;
+          const remainder = amount - offset;
+          this.pendingForCPU += remainder;
+        } else {
+          this.pendingForCPU += amount;
+        }
+      } else {
+        if (this.pendingForCPU > 0) {
+          const offset = Math.min(this.pendingForCPU, amount);
+          this.pendingForCPU -= offset;
+          const remainder = amount - offset;
+          this.pendingForPlayer += remainder;
+        } else {
+          this.pendingForPlayer += amount;
+        }
+      }
+
+      this.renderTray(playerEngine.garbageTrayEl, this.pendingForPlayer);
+      this.renderTray(cpuEngine.garbageTrayEl, this.pendingForCPU);
+    };
+
+    GarbageScaling.prototype.releasePendingGarbage = function(targetEngine) {
+      const isTargetCPU = targetEngine.isCPU;
+      let count = isTargetCPU ? this.pendingForCPU : this.pendingForPlayer;
+      if (count <= 0) return;
+
+      // Cap single drop wave at 18 blocks (3 full rows) for fair playability
+      const dropNow = Math.min(count, 18);
+      if (isTargetCPU) {
+        this.pendingForCPU -= dropNow;
+      } else {
+        this.pendingForPlayer -= dropNow;
+      }
+
+      // Distribute garbage evenly across random columns from top
+      const colOrder = [0, 1, 2, 3, 4, 5].sort(() => Math.random() - 0.5);
+      for (let i = 0; i < dropNow; i++) {
+        const col = colOrder[i % COLS];
+        if (targetEngine.grid[0][col] === 0) {
+          targetEngine.grid[0][col] = 9; // Garbage block ID
+        }
+      }
+
+      targetEngine.applyGravityImmediate();
+      targetEngine.evaluateWarningState();
+      if (!isTargetCPU) SFX.garbage();
+
+      this.renderTray(targetEngine.garbageTrayEl, isTargetCPU ? this.pendingForCPU : this.pendingForPlayer);
+    };
+
+    GarbageScaling.prototype.renderTray = function(trayEl, amount) {
+      if (!trayEl) return;
+      trayEl.innerHTML = '';
+      if (amount <= 0) {
+        trayEl.innerHTML = '<span style="font-size:0.72rem;color:#475569;">No Incoming Garbage</span>';
+        return;
+      }
+      let rem = amount;
+      while (rem >= 18) {
+        trayEl.innerHTML += '<span class="garbage-icon crown" title="18 Garbage"></span>';
+        rem -= 18;
+      }
+      while (rem >= 6) {
+        trayEl.innerHTML += '<span class="garbage-icon rock" title="6 Garbage"></span>';
+        rem -= 6;
+      }
+      while (rem > 0) {
+        trayEl.innerHTML += '<span class="garbage-icon small" title="1 Garbage"></span>';
+        rem -= 1;
+      }
+    };
+
+      //CPUEngine constructor
+
+function CPUEngine(coreEngine, courseProfile, opponentEngine = null) {
+  this.engine = coreEngine;
+  this.opponentEngine = opponentEngine;
+  this.profile = courseProfile;
+  this.targetX = 2;
+  this.targetOrientation = 0;
+  this.actionTimer = 0;
+  this.pieceElapsed = 0;
+  this.decidedForCurrentPiece = false;
+  this.useHardDropThisPiece = false;
+  this.softDropDurationBeforeHard = 0;
+  this.hardDropPerformed = false;
+  this.hasFiredTwoChain = false; // Used by Course 8 phase progression (2-chain opener -> 5-chain builder)
+  this.hasFiredThreeChain = false; // Used by Course 10 phase progression (3-chain opener -> 6-chain builder)
+  this.chainPhaseIndex = 0; // Used by Master Course multi-stage sequence (2-chain -> 4-chain -> 10-12+ chain)
+  this.peakChainInCurrentTurn = 0;
+}
+
+CPUEngine.prototype.setProfile = function(profile) {
+  this.profile = profile;
+  this.decidedForCurrentPiece = false;
+  this.hardDropPerformed = false;
+  this.hasFiredTwoChain = false;
+  this.hasFiredThreeChain = false;
+  this.chainPhaseIndex = 0;
+  this.peakChainInCurrentTurn = 0;
+  if (profile.dropIntervalMs) {
+    this.engine.baseDropInterval = profile.dropIntervalMs;
+    this.engine.dropInterval = profile.dropIntervalMs;
+  }
+  if (profile.playerDropIntervalMs && this.opponentEngine) {
+    this.opponentEngine.baseDropInterval = profile.playerDropIntervalMs;
+    this.opponentEngine.dropInterval = profile.playerDropIntervalMs;
+  }
+};
+
+CPUEngine.prototype.recordCompletedChain = function(chainCount) {
+  if (chainCount >= 2) {
+    this.hasFiredTwoChain = true;
+  }
+  if (chainCount >= 3) {
+    this.hasFiredThreeChain = true;
+  }
+  if (this.profile && Array.isArray(this.profile.chainSequence)) {
+    const currentGoal = this.profile.chainSequence[this.chainPhaseIndex];
+    if (currentGoal !== undefined && chainCount >= currentGoal && this.chainPhaseIndex < this.profile.chainSequence.length - 1) {
+      this.chainPhaseIndex++;
+    }
+  }
+};
+
+CPUEngine.prototype.onNewPiece = function(piece) {
+  // Finalize any chain phase advancement from the previous piece's resolution
+  if (this.peakChainInCurrentTurn > 0) {
+    this.recordCompletedChain(this.peakChainInCurrentTurn);
+    this.peakChainInCurrentTurn = 0;
+  }
+
+  // Keep engine.nextQueue bounded to 2 preview pieces to prevent array/UI overflow
+  if (Array.isArray(this.engine.nextQueue) && this.engine.nextQueue.length > 2) {
+    this.engine.nextQueue.length = 2;
+  }
+
+  this.pieceElapsed = 0;
+  this.actionTimer = this.profile.instantMove ? 0 : this.profile.thinkDelayMs;
+  this.decidedForCurrentPiece = true;
+
+  // Determine drop cadence for this piece
+  if (this.profile.instantMove) {
+    this.useHardDropThisPiece = true;
+    this.softDropDurationBeforeHard = 0;
+  } else if (this.profile.softThenHardDrop) {
+    this.useHardDropThisPiece = true;
+    this.softDropDurationBeforeHard = this.profile.softBeforeHardMs || 420;
+  } else {
+    this.useHardDropThisPiece = Boolean(this.profile.allowHardDrop);
+    this.softDropDurationBeforeHard = this.profile.softDropDelayMs || 650;
+  }
+
+  const plan = this.evaluateBestPlacement(piece);
+  this.targetX = plan.x;
+  this.targetOrientation = plan.orientation;
+};
+
+CPUEngine.prototype.cloneGrid = function(grid) {
+  return grid.map(row => [...row]);
+};
+
+CPUEngine.prototype.applySimGravity = function(sim) {
+  for (let c = 0; c < COLS; c++) {
+    let wr = TOTAL_ROWS - 1;
+    for (let r = TOTAL_ROWS - 1; r >= 0; r--) {
+      if (sim[r][c] !== 0) {
+        const tmp = sim[r][c];
+        sim[r][c] = 0;
+        sim[wr][c] = tmp;
+        wr--;
+      }
+    }
+  }
+};
+
+CPUEngine.prototype.dropPairOnSim = function(sim, x, ori, pivotColor, subColor) {
+  const off = ORIENTATION_OFFSETS[ori];
+  const sx = x + off.dx;
+  if (sx < 0 || sx >= COLS) return null;
+
+  const dropBlock = (col, color) => {
+    for (let r = TOTAL_ROWS - 1; r >= 0; r--) {
+      if (sim[r][col] === 0) {
+        sim[r][col] = color;
+        return r;
+      }
+    }
+    return -1;
+  };
+
+  let r1, r2;
+  if (ori === 2) {
+    r2 = dropBlock(sx, subColor);
+    r1 = dropBlock(x, pivotColor);
+  } else {
+    r1 = dropBlock(x, pivotColor);
+    r2 = dropBlock(sx, subColor);
+  }
+
+  if (r1 < 1 || r2 < 1) return null;
+  return { r1, c1: x, r2, c2: sx };
+};
+
+CPUEngine.prototype.resolveSimChains = function(sim, allowDiagonal, maxDepth = 6) {
+  let chainDepth = 0;
+  let totalCleared = 0;
+
+  while (chainDepth < maxDepth) {
+    const matches = this.findSimMatches(sim, allowDiagonal);
+    if (matches.length === 0) break;
+    chainDepth++;
+
+    const uniqueKeys = new Set(matches.map(m => `${m.r},${m.c}`));
+    totalCleared += uniqueKeys.size;
+
+    for (const key of uniqueKeys) {
+      const [mr, mc] = key.split(',').map(Number);
+      sim[mr][mc] = 0;
+    }
+    this.applySimGravity(sim);
+  }
+
+  return { chainDepth, totalCleared };
+};
+
+/**
+ * Measures how close the board is to triggering a multi-step chain ("trigger point" & pattern potential)
+ */
+CPUEngine.prototype.evaluateTriggerPotential = function(sim, allowDiagonal, maxLookaheadChain) {
+  let bestPotentialChain = 0;
+  let triggerLinks = 0;
+  let totalTriggerScore = 0;
+
+  // Test dropping each of the 5 colors across columns to detect latent chain triggers
+  for (let c = 0; c < COLS; c++) {
+    let landingRow = -1;
+    for (let r = TOTAL_ROWS - 1; r >= 1; r--) {
+      if (sim[r][c] === 0) {
+        landingRow = r;
+        break;
+      }
+    }
+    if (landingRow < 1) continue;
+
+    for (let testColor = 1; testColor <= 5; testColor++) {
+      const probe = this.cloneGrid(sim);
+      probe[landingRow][c] = testColor;
+      const res = this.resolveSimChains(probe, allowDiagonal, maxLookaheadChain);
+      if (res.chainDepth >= 2) {
+        triggerLinks++;
+        totalTriggerScore += res.chainDepth * res.chainDepth;
+        if (res.chainDepth > bestPotentialChain) {
+          bestPotentialChain = res.chainDepth;
+        }
+      }
+    }
+  }
+
+  return { bestPotentialChain, triggerLinks, totalTriggerScore };
+};
+
+CPUEngine.prototype.countGridBlocks = function(simGrid) {
+  let count = 0;
+  for (let r = 1; r < TOTAL_ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (simGrid[r][c] !== 0) count++;
+    }
+  }
+  return count;
+};
+
+CPUEngine.prototype.getColumnHeight = function(simGrid, col) {
+  for (let r = 1; r < TOTAL_ROWS; r++) {
+    if (simGrid[r][col] !== 0) {
+      return TOTAL_ROWS - r;
+    }
+  }
+  return 0;
+};
+
+/**
+ * Evaluates a static post-placement board state for Master Course chain scaffolding:
+ * builds balanced stair/sandwich foundations across outer lanes while keeping col 2 clear
+ * so the CPU never dies prematurely before completing its 10-12+ chain.
+ */
+CPUEngine.prototype.scoreMasterBoardState = function(simGrid, maxChainCap, desiredChainTarget) {
+  let boardScore = 0;
+  const dirs = [
+    { dr: 0, dc: 1, w: 14 },
+    { dr: 1, dc: 0, w: 14 },
+    { dr: 1, dc: 1, w: 22 },
+    { dr: -1, dc: 1, w: 22 }
+  ];
+
+  // 1. Score 2-block links (ready for 1-block completion) across all 8 directions
+  for (let r = 1; r < TOTAL_ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const col = simGrid[r][c];
+      if (col === 0 || col === 9) continue;
+
+      for (const { dr, dc, w } of dirs) {
+        const nr = r + dr;
+        const nc = c + dc;
+        if (nr >= 1 && nr < TOTAL_ROWS && nc >= 0 && nc < COLS && simGrid[nr][nc] === col) {
+          const br = r - dr, bc = c - dc;
+          const fr = nr + dr, fc = nc + dc;
+          const backOpen = br >= 1 && br < TOTAL_ROWS && bc >= 0 && bc < COLS && simGrid[br][bc] === 0;
+          const frontOpen = fr >= 1 && fr < TOTAL_ROWS && fc >= 0 && fc < COLS && simGrid[fr][fc] === 0;
+          if (backOpen || frontOpen) {
+            boardScore += w * 1.65;
+          } else {
+            boardScore += w * 0.55;
+          }
+        }
+      }
+    }
+  }
+
+  // 2. Evaluate full trigger tree potential (quadratic reward for deep chains)
+  const pot = this.evaluateTriggerPotential(simGrid, true, maxChainCap);
+  if (pot.bestPotentialChain >= 2) {
+    boardScore += Math.pow(pot.bestPotentialChain, 2.2) * 95 + pot.triggerLinks * 30;
+  }
+
+  // 3. Survival & lane-balance discipline so Master CPU doesn't die before reaching 10-12+ chain:
+  // Keep spawn column (col 2) safe from fatal top-out and avoid extreme single-column spikes.
+  const spawnColHeight = this.getColumnHeight(simGrid, 2);
+  if (spawnColHeight >= 11) boardScore -= 250000;
+  else if (spawnColHeight >= 9) boardScore -= 18000;
+  else if (spawnColHeight >= 7) boardScore -= 2200;
+  else if (spawnColHeight >= 5 && desiredChainTarget >= 10) boardScore -= 320;
+
+  let maxOuterHeight = 0;
+  let minOuterHeight = TOTAL_ROWS;
+  for (const c of [0, 1, 3, 4, 5]) {
+    const h = this.getColumnHeight(simGrid, c);
+    if (h > maxOuterHeight) maxOuterHeight = h;
+    if (h < minOuterHeight) minOuterHeight = h;
+    if (h >= 12) boardScore -= 45000;
+  }
+  // Penalize uneven jagged towers so all 5 outer columns build together toward 10-12+ chains
+  const spread = maxOuterHeight - minOuterHeight;
+  if (spread >= 5) {
+    boardScore -= (spread - 4) * 280;
+  }
+
+  return boardScore;
+};
+
+CPUEngine.prototype.getBoardContext = function() {
+  const p = this.profile;
+  const incomingGarbage = (this.engine.pendingGarbageRef && this.engine.pendingGarbageRef.pendingForCPU) || 0;
+  const ownBlocks = this.engine.countBoardBlocks();
+
+  let opponentBlocks = 0;
+  let opponentWarning = false;
+  let opponentChainActive = 0;
+
+  if (p.observeOpponent && this.opponentEngine) {
+    opponentBlocks = this.opponentEngine.countBoardBlocks();
+    opponentWarning = this.opponentEngine.warningActive || opponentBlocks >= 44;
+    opponentChainActive = this.opponentEngine.chainCount || 0;
+  }
+
+  // Dynamic chain target selection across multi-phase courses
+  let desiredChainTarget = p.targetChain || 1;
+  if (Array.isArray(p.chainSequence) && p.chainSequence.length > 0) {
+    // Master Course: 2-chain -> 4-chain -> 10-12+ chain
+    desiredChainTarget = p.chainSequence[Math.min(this.chainPhaseIndex, p.chainSequence.length - 1)];
+  } else if (p.openerThreeThenSix) {
+    // Course 10: fires a 3-chain first, then builds toward a 6-chain
+    desiredChainTarget = this.hasFiredThreeChain ? 6 : 3;
+  } else if (p.openerTwoThenFive) {
+    // Course 8 & 9: fires an early 2-chain first, then builds toward 5-chains
+    desiredChainTarget = this.hasFiredTwoChain ? 5 : 2;
+  }
+
+  return {
+    incomingGarbage,
+    ownBlocks,
+    opponentBlocks,
+    opponentWarning,
+    opponentChainActive,
+    desiredChainTarget
+  };
+};
+
+CPUEngine.prototype.evaluateBestPlacement = function(piece) {
+  const p = this.profile;
+  const allowedOrientations = Math.random() < p.rotateChance ? [0, 1, 2, 3] : [0];
+  const ctx = this.getBoardContext();
+  // Only read the first 2 preview slots so large nextQueue arrays never cause extra work
+  const previewWindow = Array.isArray(this.engine.nextQueue) ? this.engine.nextQueue.slice(0, 2) : [];
+  const nextPreview = previewWindow[0] || null;
+  const secondPreview = previewWindow[1] || null;
+
+  let bestScore = -9999999;
+  let bestMove = { x: Math.floor(Math.random() * COLS), orientation: 0 };
+
+  for (const ori of allowedOrientations) {
+    const off = ORIENTATION_OFFSETS[ori];
+    for (let x = 0; x < COLS; x++) {
+      const sx = x + off.dx;
+      if (sx < 0 || sx >= COLS) continue;
+
+      const simScore = p.masterPlanner
+        ? this.simulateMasterDropScore(x, ori, piece.pivotColor, piece.subColor, nextPreview, secondPreview, ctx)
+        : this.simulateDropScore(x, ori, piece.pivotColor, piece.subColor, nextPreview, secondPreview, ctx);
+
+      if (simScore > bestScore) {
+        bestScore = simScore;
+        bestMove = { x, orientation: ori };
+      }
+    }
+  }
+  return bestMove;
+};
+
+/**
+ * Dedicated near-perfect Master Course evaluator:
+ * Jointly optimizes (Current Piece + NEXT Piece) across all 22x22 = 484 two-piece branches,
+ * defends against early top-outs via garbage-threshold counter-chaining & spawn-lane safety,
+ * and scales smoothly up to 10-12+ chains.
+ */
+CPUEngine.prototype.simulateMasterDropScore = function(x, ori, pivotColor, subColor, nextPreview, secondPreview, ctx) {
+  const p = this.profile;
+  const sim = this.cloneGrid(this.engine.grid);
+
+  const placed = this.dropPairOnSim(sim, x, ori, pivotColor, subColor);
+  if (!placed) return -9000000;
+
+  const maxChainCap = p.maxChainLookahead || 14;
+  const { chainDepth, totalCleared } = this.resolveSimChains(sim, true, maxChainCap);
+  const blocksAfter = this.countGridBlocks(sim);
+  const spawnColHeightBefore = this.getColumnHeight(this.engine.grid, 2);
+
+  // Survival thresholds: fire an emergency counter-chain before incoming garbage or board height causes a loss
+  const underGarbagePressure = ctx.incomingGarbage >= 6 && (ctx.ownBlocks + ctx.incomingGarbage >= 50 || spawnColHeightBefore >= 7);
+  const opponentInDanger = ctx.opponentWarning || ctx.opponentChainActive >= 4;
+  const boardNearFull = ctx.ownBlocks >= 56 || spawnColHeightBefore >= 9;
+
+  // Case A: This move triggers a chain right now
+  if (chainDepth > 0) {
+    if (chainDepth >= ctx.desiredChainTarget) {
+      // Exact or greater target chain achieved (2 -> 4 -> 10-12+): top priority!
+      return 600000 + Math.pow(chainDepth, 2.45) * 1300 + totalCleared * 95 + this.scoreMasterBoardState(sim, maxChainCap, ctx.desiredChainTarget);
+    }
+    if ((underGarbagePressure || opponentInDanger || boardNearFull) && chainDepth >= 2) {
+      // Emergency counter-chain or lethal finisher so Master CPU survives to build its mega-chain
+      return 450000 + Math.pow(chainDepth, 2.25) * 1050 + totalCleared * 80;
+    }
+    if (boardNearFull && chainDepth === 1 && spawnColHeightBefore >= 10) {
+      // Last-resort emergency pop to clear spawn column
+      return 120000 + totalCleared * 60;
+    }
+    // Otherwise, penalize breaking a partially built chain early
+    const earlyBreakPenalty = (ctx.desiredChainTarget - chainDepth) * 20000;
+    return -earlyBreakPenalty + this.scoreMasterBoardState(sim, maxChainCap, ctx.desiredChainTarget);
+  }
+
+  // Case B: Non-popping placement — evaluate static scaffolding + full 2-piece (Current + NEXT) tree
+  let baseScore = this.scoreMasterBoardState(sim, maxChainCap, ctx.desiredChainTarget);
+
+  if (blocksAfter >= 52) {
+    baseScore -= (blocksAfter - 51) * 550;
+  }
+
+  if (nextPreview) {
+    let bestSecondStepScore = -9999999;
+
+    for (const nOri of [0, 1, 2, 3]) {
+      const nOff = ORIENTATION_OFFSETS[nOri];
+      for (let nx = 0; nx < COLS; nx++) {
+        const nsx = nx + nOff.dx;
+        if (nsx < 0 || nsx >= COLS) continue;
+
+        const nextSim = this.cloneGrid(sim);
+        if (!this.dropPairOnSim(nextSim, nx, nOri, nextPreview.pivotColor, nextPreview.subColor)) continue;
+
+        const follow = this.resolveSimChains(nextSim, true, maxChainCap);
+        let branchScore = 0;
+
+        if (follow.chainDepth > 0) {
+          if (follow.chainDepth >= ctx.desiredChainTarget) {
+            branchScore = 480000 + Math.pow(follow.chainDepth, 2.4) * 1200 + follow.totalCleared * 85;
+          } else if ((underGarbagePressure || opponentInDanger || boardNearFull) && follow.chainDepth >= 2) {
+            branchScore = 340000 + Math.pow(follow.chainDepth, 2.15) * 900;
+          } else {
+            branchScore = -(ctx.desiredChainTarget - follow.chainDepth) * 16000 + this.scoreMasterBoardState(nextSim, maxChainCap, ctx.desiredChainTarget);
+          }
+        } else {
+          branchScore = this.scoreMasterBoardState(nextSim, maxChainCap, ctx.desiredChainTarget);
+
+          if (secondPreview) {
+            const potAfterTwo = this.evaluateTriggerPotential(nextSim, true, maxChainCap);
+            if (potAfterTwo.bestPotentialChain >= ctx.desiredChainTarget) {
+              branchScore += 210000 + potAfterTwo.bestPotentialChain * 5000;
+            } else if (potAfterTwo.bestPotentialChain >= 2) {
+              branchScore += Math.pow(potAfterTwo.bestPotentialChain, 2.15) * 120 + potAfterTwo.triggerLinks * 38;
+            }
+          }
+        }
+
+        if (branchScore > bestSecondStepScore) {
+          bestSecondStepScore = branchScore;
+        }
+      }
+    }
+
+    if (bestSecondStepScore > -9000000) {
+      baseScore = baseScore * 0.35 + bestSecondStepScore * 0.65;
+    }
+  }
+
+  return baseScore;
+};
+
+CPUEngine.prototype.simulateDropScore = function(x, ori, pivotColor, subColor, nextPreview, secondPreview, ctx) {
+  const p = this.profile;
+  const sim = this.cloneGrid(this.engine.grid);
+
+  const placed = this.dropPairOnSim(sim, x, ori, pivotColor, subColor);
+  if (!placed) return -500000; // Avoid topping out
+
+  const { r1, c1, r2, c2 } = placed;
+  let score = (Math.random() - 0.5) * p.noise;
+
+  // Height safety & keeping center column (col 2) open
+  const heightPenalty = (TOTAL_ROWS - r1) + (TOTAL_ROWS - r2);
+  score -= heightPenalty * (ctx.ownBlocks >= 42 ? 7.5 : 4.0);
+  if (x === 2 || c2 === 2) score -= (ctx.ownBlocks >= 40 ? 36 : 18);
+
+  // Resolve immediate chains up to Course's chain awareness depth
+  const maxChainCap = Math.max(2, p.maxChainLookahead || p.targetChain || 2);
+  const { chainDepth, totalCleared } = this.resolveSimChains(sim, p.detectDiagonal, maxChainCap);
+
+  if (chainDepth > 0) {
+    // Recognize incoming garbage or opponent danger to trigger chain immediately
+    const underGarbageThreat = p.recognizeGarbage && ctx.incomingGarbage >= 4;
+    const opponentPressured = p.observeOpponent && (ctx.opponentWarning || ctx.opponentChainActive >= 2);
+    const emergencyClear = ctx.ownBlocks >= 46;
+
+    if (chainDepth >= ctx.desiredChainTarget) {
+      score += chainDepth * 320 + totalCleared * 40;
+    } else if (underGarbageThreat || opponentPressured || emergencyClear) {
+      score += chainDepth * 260 + totalCleared * 35;
+    } else if (chainDepth === 1 && p.detectOrthogonal) {
+      if (p.holdTriggerForBigChain && ctx.ownBlocks < 38) {
+        score -= 45;
+      } else {
+        score += totalCleared * 45;
+      }
+    } else if (chainDepth >= 2) {
+      const prob = p.chain2Chance !== undefined ? p.chain2Chance : 0.85;
+      if (Math.random() < prob) {
+        if (p.holdTriggerForBigChain && chainDepth < ctx.desiredChainTarget && ctx.ownBlocks < 36) {
+          score += chainDepth * 65;
+        } else {
+          score += chainDepth * 165;
+        }
+      }
+    }
+  }
+
+  // Bonus for placing identical colors adjacent (orthogonal + diagonal weighting)
+  if (p.detectOrthogonal) {
+    const diagWeight = p.diagonalWeight || 1.0;
+    const checkAdj = (r, c, colVal) => {
+      const orthDirs = [[-1,0],[1,0],[0,-1],[0,1]];
+      for (const [dr, dc] of orthDirs) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < TOTAL_ROWS && nc >= 0 && nc < COLS && sim[nr][nc] === colVal) {
+          score += 14;
+        }
+      }
+      if (p.detectDiagonal) {
+        const diagDirs = [[-1,-1],[-1,1],[1,-1],[1,1]];
+        for (const [dr, dc] of diagDirs) {
+          const nr = r + dr, nc = c + dc;
+          if (nr >= 0 && nr < TOTAL_ROWS && nc >= 0 && nc < COLS && sim[nr][nc] === colVal) {
+            score += Math.round(14 * diagWeight);
+          }
+        }
+      }
+    };
+    checkAdj(r1, c1, pivotColor);
+    checkAdj(r2, c2, subColor);
+  }
+
+  // Evaluate latent trigger point & deep chain scaffolding potential
+  if (p.recognizeTriggerPoint && chainDepth === 0) {
+    const potential = this.evaluateTriggerPotential(sim, p.detectDiagonal, maxChainCap);
+    if (potential.bestPotentialChain >= 2) {
+      score += potential.bestPotentialChain * 52 + potential.triggerLinks * 12;
+    }
+  }
+
+  // Observe NEXT preview piece (1-step lookahead)
+  if (p.observeNextPiece && nextPreview && chainDepth === 0) {
+    let bestFollowUp = 0;
+    const sampleCols = [0, 1, 2, 3, 4, 5];
+    const sampleOris = p.complexPatterns ? [0, 1, 2, 3] : [0, 1];
+
+    for (const nOri of sampleOris) {
+      for (const nx of sampleCols) {
+        const nextSim = this.cloneGrid(sim);
+        if (!this.dropPairOnSim(nextSim, nx, nOri, nextPreview.pivotColor, nextPreview.subColor)) continue;
+        const follow = this.resolveSimChains(nextSim, p.detectDiagonal, maxChainCap);
+        if (follow.chainDepth > bestFollowUp) {
+          bestFollowUp = follow.chainDepth;
+        }
+      }
+    }
+
+    if (bestFollowUp >= 2) {
+      score += bestFollowUp * (p.nextPieceWeight || 55);
+    }
+  }
+
+  return score;
+};
+
+CPUEngine.prototype.findSimMatches = function(simGrid, allowDiagonal) {
+  const dirs = allowDiagonal
+    ? [{ dr: 0, dc: 1 }, { dr: 1, dc: 0 }, { dr: 1, dc: 1 }, { dr: -1, dc: 1 }]
+    : [{ dr: 0, dc: 1 }, { dr: 1, dc: 0 }];
+  const found = [];
+  for (let r = 0; r < TOTAL_ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const col = simGrid[r][c];
+      if (col === 0 || col === 9) continue;
+      for (const { dr, dc } of dirs) {
+        const line = [{ r, c }];
+        let nr = r + dr, nc = c + dc;
+        while (nr >= 0 && nr < TOTAL_ROWS && nc >= 0 && nc < COLS && simGrid[nr][nc] === col) {
+          line.push({ r: nr, c: nc });
+          nr += dr;
+          nc += dc;
+        }
+        if (line.length >= 3) found.push(...line);
+      }
+    }
+  }
+  return found;
+};
+
+CPUEngine.prototype.update = function(dt) {
+  // Track peak chain length during resolving phase so phase progression updates automatically
+  if (this.engine.chainCount > this.peakChainInCurrentTurn) {
+    this.peakChainInCurrentTurn = this.engine.chainCount;
+  }
+
+  if (this.engine.state !== 'FALLING' || !this.engine.activePiece) return;
+
+  // Master Course: True instant speed placement & hard drop
+  if (this.profile.instantMove) {
+    const piece = this.engine.activePiece;
+    let safety = 0;
+    while (piece.orientation !== this.targetOrientation && safety < 4) {
+      const diff = (this.targetOrientation - piece.orientation + 4) % 4;
+      if (diff === 2) this.engine.rotate(2);
+      else if (diff === 1) this.engine.rotate(1);
+      else this.engine.rotate(-1);
+      safety++;
+    }
+    safety = 0;
+    while (piece.x < this.targetX && safety < COLS) {
+      if (!this.engine.moveHorizontal(1)) break;
+      safety++;
+    }
+    safety = 0;
+    while (piece.x > this.targetX && safety < COLS) {
+      if (!this.engine.moveHorizontal(-1)) break;
+      safety++;
+    }
+    this.hardDropPerformed = true;
+    this.actionTimer = 9999;
+    this.engine.hardDrop();
+    return;
+  }
+
+  this.pieceElapsed += dt;
+  this.actionTimer -= dt;
+
+  if (this.actionTimer <= 0) {
+    const piece = this.engine.activePiece;
+
+    // 1. Rotate toward targetOrientation
+    if (piece.orientation !== this.targetOrientation) {
+      const diff = (this.targetOrientation - piece.orientation + 4) % 4;
+      if (diff === 2) this.engine.rotate(2);
+      else if (diff === 1) this.engine.rotate(1);
+      else this.engine.rotate(-1);
+      this.actionTimer = this.profile.moveIntervalMs;
+      return;
+    }
+
+    // 2. Move horizontally toward targetX
+    if (piece.x < this.targetX) {
+      this.engine.moveHorizontal(1);
+      this.actionTimer = this.profile.moveIntervalMs;
+      return;
+    } else if (piece.x > this.targetX) {
+      this.engine.moveHorizontal(-1);
+      this.actionTimer = this.profile.moveIntervalMs;
+      return;
+    }
+
+    // 3. Drop execution once aligned:
+    // Course 8 / 9 / 10 pattern: soft drop for a while, then finish with a hard drop
+    if (this.profile.softThenHardDrop) {
+      if (this.pieceElapsed < this.softDropDurationBeforeHard) {
+        this.engine.softDrop();
+        this.actionTimer = this.profile.softDropIntervalMs;
+      } else {
+        this.hardDropPerformed = true;
+        this.actionTimer = 9999;
+        this.engine.hardDrop();
+      }
+      return;
+    }
+
+    if (this.useHardDropThisPiece && this.pieceElapsed >= this.softDropDurationBeforeHard) {
+      this.hardDropPerformed = true;
+      this.actionTimer = 9999;
+      this.engine.hardDrop();
+      return;
+    }
+
+    if (this.pieceElapsed >= this.profile.softDropDelayMs && Math.random() < this.profile.softDropChance) {
+      this.engine.softDrop();
+      this.actionTimer = this.profile.softDropIntervalMs;
+    } else {
+      this.actionTimer = this.profile.moveIntervalMs;
+    }
+  }
+};
+
+/**
+ * =========================================================================
+ * EXTENSIBLE COURSE REGISTRY (Courses 1–10 + Master Course)
+ * =========================================================================
+ */
+const COURSE_DEFINITIONS = [
+  {
+    id: 1,
+    title: 'Course 1: Novice',
+    subtitle: 'Rarely rotates or soft drops, no hard drop, minimal chains.',
+    courseScale: 0.65,
+    stages: [
+      { name: 'Stage 1-1', cpuName: 'CPU Sprout',   dropIntervalMs: 840, rotateChance: 0.15, detectOrthogonal: false, detectDiagonal: false, chain2Chance: 0.02, softDropDelayMs: 2800, softDropChance: 0.15, softDropIntervalMs: 140, allowHardDrop: false, thinkDelayMs: 550, moveIntervalMs: 240, noise: 90, stageMult: 0.8 },
+      { name: 'Stage 1-2', cpuName: 'CPU Pebble',   dropIntervalMs: 830, rotateChance: 0.20, detectOrthogonal: false, detectDiagonal: false, chain2Chance: 0.04, softDropDelayMs: 2600, softDropChance: 0.18, softDropIntervalMs: 130, allowHardDrop: false, thinkDelayMs: 500, moveIntervalMs: 220, noise: 80, stageMult: 0.9 },
+      { name: 'Stage 1-3', cpuName: 'CPU Breeze',   dropIntervalMs: 820, rotateChance: 0.25, detectOrthogonal: true,  detectDiagonal: false, chain2Chance: 0.05, softDropDelayMs: 2400, softDropChance: 0.20, softDropIntervalMs: 120, allowHardDrop: false, thinkDelayMs: 460, moveIntervalMs: 210, noise: 70, stageMult: 1.0 },
+      { name: 'Stage 1-4', cpuName: 'CPU Rookie',   dropIntervalMs: 810, rotateChance: 0.30, detectOrthogonal: true,  detectDiagonal: false, chain2Chance: 0.08, softDropDelayMs: 2200, softDropChance: 0.22, softDropIntervalMs: 110, allowHardDrop: false, thinkDelayMs: 420, moveIntervalMs: 195, noise: 60, stageMult: 1.1 }
+    ]
+  },
+  {
+    id: 2,
+    title: 'Course 2: Apprentice',
+    subtitle: 'Uses rotation & horizontal/vertical match-3; rare soft drop or diagonals.',
+    courseScale: 0.85,
+    stages: [
+      { name: 'Stage 2-1', cpuName: 'CPU Scout',    dropIntervalMs: 800, rotateChance: 0.75, detectOrthogonal: true,  detectDiagonal: false, chain2Chance: 0.10, softDropDelayMs: 2100, softDropChance: 0.25, softDropIntervalMs: 110, allowHardDrop: false, thinkDelayMs: 380, moveIntervalMs: 175, noise: 45, stageMult: 0.9 },
+      { name: 'Stage 2-2', cpuName: 'CPU Archer',   dropIntervalMs: 790, rotateChance: 0.80, detectOrthogonal: true,  detectDiagonal: false, chain2Chance: 0.12, softDropDelayMs: 1950, softDropChance: 0.28, softDropIntervalMs: 105, allowHardDrop: false, thinkDelayMs: 350, moveIntervalMs: 165, noise: 40, stageMult: 1.0 },
+      { name: 'Stage 2-3', cpuName: 'CPU Squire',   dropIntervalMs: 780, rotateChance: 0.85, detectOrthogonal: true,  detectDiagonal: true,  chain2Chance: 0.15, softDropDelayMs: 1800, softDropChance: 0.30, softDropIntervalMs: 100, allowHardDrop: false, thinkDelayMs: 320, moveIntervalMs: 155, noise: 35, stageMult: 1.1 },
+      { name: 'Stage 2-4', cpuName: 'CPU Warden',   dropIntervalMs: 770, rotateChance: 0.90, detectOrthogonal: true,  detectDiagonal: true,  chain2Chance: 0.18, softDropDelayMs: 1650, softDropChance: 0.35, softDropIntervalMs: 95,  allowHardDrop: false, thinkDelayMs: 300, moveIntervalMs: 145, noise: 30, stageMult: 1.2 }
+    ]
+  },
+  {
+    id: 3,
+    title: 'Course 3: Tactician',
+    subtitle: 'Soft drops after a delay, targets vertical/horizontal matches & 2-chains.',
+    courseScale: 1.0,
+    stages: [
+      { name: 'Stage 3-1', cpuName: 'CPU Adept',    dropIntervalMs: 760, rotateChance: 0.95, detectOrthogonal: true,  detectDiagonal: false, chain2Chance: 0.35, softDropDelayMs: 1350, softDropChance: 0.70, softDropIntervalMs: 85,  allowHardDrop: false, thinkDelayMs: 280, moveIntervalMs: 135, noise: 25, stageMult: 0.95 },
+      { name: 'Stage 3-2', cpuName: 'CPU Mystic',   dropIntervalMs: 750, rotateChance: 0.96, detectOrthogonal: true,  detectDiagonal: false, chain2Chance: 0.42, softDropDelayMs: 1250, softDropChance: 0.75, softDropIntervalMs: 80,  allowHardDrop: false, thinkDelayMs: 260, moveIntervalMs: 125, noise: 22, stageMult: 1.0 },
+      { name: 'Stage 3-3', cpuName: 'CPU Knight',   dropIntervalMs: 740, rotateChance: 0.98, detectOrthogonal: true,  detectDiagonal: true,  chain2Chance: 0.48, softDropDelayMs: 1150, softDropChance: 0.80, softDropIntervalMs: 75,  allowHardDrop: false, thinkDelayMs: 240, moveIntervalMs: 120, noise: 20, stageMult: 1.1 },
+      { name: 'Stage 3-4', cpuName: 'CPU Captain',  dropIntervalMs: 730, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  chain2Chance: 0.55, softDropDelayMs: 1050, softDropChance: 0.85, softDropIntervalMs: 70,  allowHardDrop: false, thinkDelayMs: 220, moveIntervalMs: 110, noise: 18, stageMult: 1.2 }
+    ]
+  },
+  {
+    id: 4,
+    title: 'Course 4: Challenger',
+    subtitle: 'Faster soft drops, active diagonal matches & 2-chains (not yet expert).',
+    courseScale: 1.15,
+    stages: [
+      { name: 'Stage 4-1', cpuName: 'CPU Vanguard', dropIntervalMs: 715, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  chain2Chance: 0.72, softDropDelayMs: 880,  softDropChance: 0.90, softDropIntervalMs: 62,  allowHardDrop: false, thinkDelayMs: 200, moveIntervalMs: 100, noise: 14, stageMult: 1.0 },
+      { name: 'Stage 4-2', cpuName: 'CPU Mirage',   dropIntervalMs: 705, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  chain2Chance: 0.78, softDropDelayMs: 800,  softDropChance: 0.92, softDropIntervalMs: 58,  allowHardDrop: false, thinkDelayMs: 185, moveIntervalMs: 95,  noise: 12, stageMult: 1.08 },
+      { name: 'Stage 4-3', cpuName: 'CPU Tempest',  dropIntervalMs: 695, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  chain2Chance: 0.84, softDropDelayMs: 720,  softDropChance: 0.95, softDropIntervalMs: 54,  allowHardDrop: true,  thinkDelayMs: 170, moveIntervalMs: 90,  noise: 10, stageMult: 1.15 },
+      { name: 'Stage 4-4', cpuName: 'CPU Paragon',  dropIntervalMs: 685, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  chain2Chance: 0.90, softDropDelayMs: 650,  softDropChance: 0.96, softDropIntervalMs: 50,  allowHardDrop: true,  thinkDelayMs: 155, moveIntervalMs: 85,  noise: 8,  stageMult: 1.25 }
+    ]
+  },
+  {
+    id: 5,
+    title: 'Course 5: Contender',
+    subtitle: 'Serious pace! Faster soft drop, frequent diagonals & 2-chains with NEXT preview lookahead.',
+    courseScale: 1.25,
+    stages: [
+      { name: 'Stage 5-1', cpuName: 'CPU Striker',  dropIntervalMs: 665, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.25, targetChain: 2, observeNextPiece: true, nextPieceWeight: 55, chain2Chance: 0.94, softDropDelayMs: 520, softDropChance: 0.97, softDropIntervalMs: 44, allowHardDrop: false, thinkDelayMs: 145, moveIntervalMs: 78, noise: 7, stageMult: 1.0 },
+      { name: 'Stage 5-2', cpuName: 'CPU Lancer',   dropIntervalMs: 650, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.30, targetChain: 2, observeNextPiece: true, nextPieceWeight: 60, chain2Chance: 0.96, softDropDelayMs: 480, softDropChance: 0.98, softDropIntervalMs: 42, allowHardDrop: false, thinkDelayMs: 138, moveIntervalMs: 75, noise: 6, stageMult: 1.08 },
+      { name: 'Stage 5-3', cpuName: 'CPU Falcon',   dropIntervalMs: 635, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.35, targetChain: 2, observeNextPiece: true, nextPieceWeight: 65, chain2Chance: 0.98, softDropDelayMs: 440, softDropChance: 0.98, softDropIntervalMs: 40, allowHardDrop: false, thinkDelayMs: 130, moveIntervalMs: 72, noise: 5, stageMult: 1.15 },
+      { name: 'Stage 5-4', cpuName: 'CPU Blazer',   dropIntervalMs: 620, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.40, targetChain: 2, observeNextPiece: true, nextPieceWeight: 70, chain2Chance: 1.00, softDropDelayMs: 400, softDropChance: 0.99, softDropIntervalMs: 38, allowHardDrop: false, thinkDelayMs: 122, moveIntervalMs: 68, noise: 4, stageMult: 1.25 }
+    ]
+  },
+  {
+    id: 6,
+    title: 'Course 6: Strategist',
+    subtitle: 'Recognizes incoming garbage & trigger points to extend simple patterns into 3-chains.',
+    courseScale: 1.35,
+    stages: [
+      { name: 'Stage 6-1', cpuName: 'CPU Oracle',   dropIntervalMs: 600, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.40, targetChain: 3, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 75, chain2Chance: 0.96, softDropDelayMs: 360, softDropChance: 0.99, softDropIntervalMs: 36, allowHardDrop: false, thinkDelayMs: 115, moveIntervalMs: 64, noise: 4, stageMult: 1.0 },
+      { name: 'Stage 6-2', cpuName: 'CPU Sage',     dropIntervalMs: 585, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.45, targetChain: 3, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 80, chain2Chance: 0.98, softDropDelayMs: 340, softDropChance: 0.99, softDropIntervalMs: 34, allowHardDrop: false, thinkDelayMs: 110, moveIntervalMs: 62, noise: 3, stageMult: 1.08 },
+      { name: 'Stage 6-3', cpuName: 'CPU Seer',     dropIntervalMs: 570, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.50, targetChain: 3, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 85, chain2Chance: 0.99, softDropDelayMs: 320, softDropChance: 1.00, softDropIntervalMs: 32, allowHardDrop: false, thinkDelayMs: 105, moveIntervalMs: 60, noise: 3, stageMult: 1.15 },
+      { name: 'Stage 6-4', cpuName: 'CPU Prophet',  dropIntervalMs: 555, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.55, targetChain: 3, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 90, chain2Chance: 1.00, softDropDelayMs: 300, softDropChance: 1.00, softDropIntervalMs: 30, allowHardDrop: false, thinkDelayMs: 100, moveIntervalMs: 58, noise: 2, stageMult: 1.25 }
+    ]
+  },
+  {
+    id: 7,
+    title: 'Course 7: Virtuoso',
+    subtitle: 'Stronger trigger awareness with complex diagonal patterns & 4-chain ambition.',
+    courseScale: 1.45,
+    stages: [
+      { name: 'Stage 7-1', cpuName: 'CPU Eclipse',  dropIntervalMs: 540, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.75, complexPatterns: true, targetChain: 4, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 95,  chain2Chance: 0.98, softDropDelayMs: 280, softDropChance: 1.00, softDropIntervalMs: 28, allowHardDrop: false, thinkDelayMs: 94, moveIntervalMs: 54, noise: 2, stageMult: 1.0 },
+      { name: 'Stage 7-2', cpuName: 'CPU Astral',   dropIntervalMs: 525, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.85, complexPatterns: true, targetChain: 4, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 100, chain2Chance: 0.99, softDropDelayMs: 260, softDropChance: 1.00, softDropIntervalMs: 27, allowHardDrop: false, thinkDelayMs: 88, moveIntervalMs: 52, noise: 2, stageMult: 1.08 },
+      { name: 'Stage 7-3', cpuName: 'CPU Zenith',   dropIntervalMs: 510, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 1.95, complexPatterns: true, targetChain: 4, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 105, chain2Chance: 1.00, softDropDelayMs: 245, softDropChance: 1.00, softDropIntervalMs: 26, allowHardDrop: false, thinkDelayMs: 84, moveIntervalMs: 50, noise: 1, stageMult: 1.15 },
+      { name: 'Stage 7-4', cpuName: 'CPU Sovereign',dropIntervalMs: 495, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 2.05, complexPatterns: true, targetChain: 4, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 110, chain2Chance: 1.00, softDropDelayMs: 230, softDropChance: 1.00, softDropIntervalMs: 25, allowHardDrop: false, thinkDelayMs: 80, moveIntervalMs: 48, noise: 1, stageMult: 1.25 }
+    ]
+  },
+  {
+    id: 8,
+    title: 'Course 8: Overlord',
+    subtitle: 'Relentless! Soft-into-hard drops, opens with 2-chains then builds 5-chains while watching your board.',
+    courseScale: 1.6,
+    stages: [
+      { name: 'Stage 8-1', cpuName: 'CPU Titan',    dropIntervalMs: 465, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 2.15, complexPatterns: true, targetChain: 5, openerTwoThenFive: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 115, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 380, softDropIntervalMs: 24, thinkDelayMs: 74, moveIntervalMs: 44, noise: 1, stageMult: 1.0 },
+      { name: 'Stage 8-2', cpuName: 'CPU Leviathan',dropIntervalMs: 445, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 2.25, complexPatterns: true, targetChain: 5, openerTwoThenFive: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 120, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 350, softDropIntervalMs: 23, thinkDelayMs: 68, moveIntervalMs: 42, noise: 1, stageMult: 1.08 },
+      { name: 'Stage 8-3', cpuName: 'CPU Nemesis',  dropIntervalMs: 425, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 2.35, complexPatterns: true, targetChain: 5, openerTwoThenFive: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 125, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 320, softDropIntervalMs: 22, thinkDelayMs: 62, moveIntervalMs: 40, noise: 0, stageMult: 1.15 },
+      { name: 'Stage 8-4', cpuName: 'CPU Omega',    dropIntervalMs: 405, rotateChance: 1.00, detectOrthogonal: true,  detectDiagonal: true,  diagonalWeight: 2.45, complexPatterns: true, targetChain: 5, openerTwoThenFive: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 130, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 290, softDropIntervalMs: 20, thinkDelayMs: 56, moveIntervalMs: 38, noise: 0, stageMult: 1.25 }
+    ]
+  },
+  {
+    id: 9,
+    title: 'Course 9: Hyperdrive',
+    subtitle: 'High-gravity pressure! Faster CPU movement with Course 8 opener-2 into 5-chain tactics.',
+    courseScale: 1.7,
+    stages: [
+      { name: 'Stage 9-1', cpuName: 'CPU Velocity', dropIntervalMs: 260, playerDropIntervalMs: 310, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 2.35, complexPatterns: true, targetChain: 5, openerTwoThenFive: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 125, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 250, softDropIntervalMs: 18, thinkDelayMs: 46, moveIntervalMs: 30, noise: 0, stageMult: 1.0 },
+      { name: 'Stage 9-2', cpuName: 'CPU Mach',     dropIntervalMs: 245, playerDropIntervalMs: 290, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 2.45, complexPatterns: true, targetChain: 5, openerTwoThenFive: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 130, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 230, softDropIntervalMs: 17, thinkDelayMs: 42, moveIntervalMs: 28, noise: 0, stageMult: 1.08 },
+      { name: 'Stage 9-3', cpuName: 'CPU Tachyon',  dropIntervalMs: 230, playerDropIntervalMs: 275, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 2.55, complexPatterns: true, targetChain: 5, openerTwoThenFive: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 135, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 210, softDropIntervalMs: 16, thinkDelayMs: 38, moveIntervalMs: 26, noise: 0, stageMult: 1.15 },
+      { name: 'Stage 9-4', cpuName: 'CPU Lightspeed',dropIntervalMs: 215, playerDropIntervalMs: 260, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 2.65, complexPatterns: true, targetChain: 5, openerTwoThenFive: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 140, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 190, softDropIntervalMs: 15, thinkDelayMs: 34, moveIntervalMs: 24, noise: 0, stageMult: 1.25 }
+    ]
+  },
+  {
+    id: 10,
+    title: 'Course 10: Cataclysm',
+    subtitle: 'Course 9 gravity with escalated combos: fires a 3-chain opener, then builds devastating 6-chains.',
+    courseScale: 1.85,
+    stages: [
+      { name: 'Stage 10-1', cpuName: 'CPU Vortex',    dropIntervalMs: 260, playerDropIntervalMs: 310, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 2.55, complexPatterns: true, targetChain: 6, maxChainLookahead: 7, openerThreeThenSix: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 135, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 240, softDropIntervalMs: 18, thinkDelayMs: 44, moveIntervalMs: 28, noise: 0, stageMult: 1.0 },
+      { name: 'Stage 10-2', cpuName: 'CPU Maelstrom', dropIntervalMs: 245, playerDropIntervalMs: 290, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 2.65, complexPatterns: true, targetChain: 6, maxChainLookahead: 7, openerThreeThenSix: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 140, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 220, softDropIntervalMs: 17, thinkDelayMs: 40, moveIntervalMs: 26, noise: 0, stageMult: 1.08 },
+      { name: 'Stage 10-3', cpuName: 'CPU Supernova', dropIntervalMs: 230, playerDropIntervalMs: 275, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 2.75, complexPatterns: true, targetChain: 6, maxChainLookahead: 7, openerThreeThenSix: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 145, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 200, softDropIntervalMs: 16, thinkDelayMs: 36, moveIntervalMs: 25, noise: 0, stageMult: 1.15 },
+      { name: 'Stage 10-4', cpuName: 'CPU Apocalypse',dropIntervalMs: 215, playerDropIntervalMs: 260, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 2.85, complexPatterns: true, targetChain: 6, maxChainLookahead: 7, openerThreeThenSix: true, observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 150, chain2Chance: 1.00, softThenHardDrop: true, softBeforeHardMs: 185, softDropIntervalMs: 15, thinkDelayMs: 32, moveIntervalMs: 23, noise: 0, stageMult: 1.25 }
+    ]
+  },
+  {
+    id: 11,
+    title: 'Master Course: Merciless',
+    subtitle: 'Instant-speed near-perfect AI under Course 9 gravity: 2-chain -> 4-chain -> massive 10-12+ chain!',
+    courseScale: 2.1,
+    stages: [
+      { name: 'Master 1', cpuName: 'MASTER Aether',   dropIntervalMs: 250, playerDropIntervalMs: 300, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 3.0, complexPatterns: true, masterPlanner: true, deepTwoPieceLookahead: true, instantMove: true, targetChain: 11, maxChainLookahead: 13, chainSequence: [2, 4, 10], observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 160, chain2Chance: 1.00, thinkDelayMs: 0, moveIntervalMs: 0, noise: 0, stageMult: 1.0 },
+      { name: 'Master 2', cpuName: 'MASTER Chronos',  dropIntervalMs: 235, playerDropIntervalMs: 285, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 3.1, complexPatterns: true, masterPlanner: true, deepTwoPieceLookahead: true, instantMove: true, targetChain: 11, maxChainLookahead: 13, chainSequence: [2, 4, 11], observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 165, chain2Chance: 1.00, thinkDelayMs: 0, moveIntervalMs: 0, noise: 0, stageMult: 1.1 },
+      { name: 'Master 3', cpuName: 'MASTER Seraph',   dropIntervalMs: 220, playerDropIntervalMs: 270, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 3.2, complexPatterns: true, masterPlanner: true, deepTwoPieceLookahead: true, instantMove: true, targetChain: 12, maxChainLookahead: 14, chainSequence: [2, 4, 12], observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 170, chain2Chance: 1.00, thinkDelayMs: 0, moveIntervalMs: 0, noise: 0, stageMult: 1.2 },
+      { name: 'Master 4', cpuName: 'MASTER Absolute', dropIntervalMs: 205, playerDropIntervalMs: 255, rotateChance: 1.00, detectOrthogonal: true, detectDiagonal: true, diagonalWeight: 5.0, complexPatterns: true, masterPlanner: true, deepTwoPieceLookahead: true, instantMove: true, targetChain: 12, maxChainLookahead: 30, chainSequence: [2, 4, 13], observeOpponent: true, recognizeGarbage: true, recognizeTriggerPoint: true, holdTriggerForBigChain: true, observeNextPiece: true, nextPieceWeight: 340, chain2Chance: 1.00, thinkDelayMs: 0, moveIntervalMs: 0, noise: 0, stageMult: 1.35 }
+    ]
+  }
+];
+
+
+    /**
+     * =========================================================================
+     * MODE CONSTRUCTOR 1: EndlessMode
+     * =========================================================================
+     */
+    function EndlessMode(containerDiv) {
+      this.container = containerDiv;
+      this.container.innerHTML = `
+        <div class="arena-wrapper">
+          <div id="endless-board-slot"></div>
+        </div>
+      `;
+      const boardSlot = this.container.querySelector('#endless-board-slot');
+      this.engine = new CoreGameEngine(boardSlot, {
+        label: 'ENDLESS MODE',
+        dropInterval: 850,
+        onChainComplete: () => {
+          // Gradually speed up gravity as blocks are cleared
+          const speedUp = Math.min(620, Math.floor(this.engine.blocksClearedTotal / 12) * 25);
+          this.engine.dropInterval = Math.max(180, 850 - speedUp);
+          this.engine.setExtraHud('CLEARED', this.engine.blocksClearedTotal);
+        },
+        onGameOver: () => {
+          this.engine.showOverlay('GAME OVER', `Final Score: ${this.engine.score.toLocaleString()} | Max Chain: ${this.engine.maxChainReached}`);
+          this.appendRestartButton(this.engine.overlayEl);
+        }
+      });
+    }
+
+    EndlessMode.prototype.appendRestartButton = function(parent) {
+      const existing = parent.querySelector('.restart-btn');
+      if (existing) existing.remove();
+      const btn = document.createElement('button');
+      btn.className = 'primary restart-btn';
+      btn.textContent = 'Play Again';
+      btn.onclick = () => this.start();
+      parent.appendChild(btn);
+    };
+
+    EndlessMode.prototype.start = function() {
+      this.engine.reset(false);
+      this.engine.setExtraHud('CLEARED', 0);
+    };
+
+    EndlessMode.prototype.update = function(dt) {
+      this.engine.update(dt);
+    };
+
+    EndlessMode.prototype.render = function() {
+      this.engine.render();
+    };
+
+    EndlessMode.prototype.getControllableEngine = function() {
+      return this.engine;
+    };
+
+    /**
+     * =========================================================================
+     * MODE CONSTRUCTOR 2: FiveMinuteTrialMode
+     * =========================================================================
+     */
+    function FiveMinuteTrialMode(containerDiv) {
+      this.container = containerDiv;
+      this.container.innerHTML = `
+        <div class="arena-wrapper">
+          <div id="trial5-board-slot"></div>
+        </div>
+      `;
+      this.remainingMs = 5 * 60 * 1000;
+      const boardSlot = this.container.querySelector('#trial5-board-slot');
+      this.engine = new CoreGameEngine(boardSlot, {
+        label: '5-MINUTE TRIAL',
+        dropInterval: 780,
+        onGameOver: () => {
+          this.engine.showOverlay('TOPPED OUT!', `Score: ${this.engine.score.toLocaleString()}`);
+          this.appendRestartButton(this.engine.overlayEl);
+        }
+      });
+    }
+
+    FiveMinuteTrialMode.prototype.appendRestartButton = function(parent) {
+      const existing = parent.querySelector('.restart-btn');
+      if (existing) existing.remove();
+      const btn = document.createElement('button');
+      btn.className = 'primary restart-btn';
+      btn.textContent = 'Retry 5-Min Trial';
+      btn.onclick = () => this.start();
+      parent.appendChild(btn);
+    };
+
+    FiveMinuteTrialMode.prototype.formatTime = function(ms) {
+      const totalSec = Math.max(0, Math.ceil(ms / 1000));
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      return `${m}:${s.toString().padStart(2, '0')}`;
+    };
+
+    FiveMinuteTrialMode.prototype.start = function() {
+      this.remainingMs = 5 * 60 * 1000;
+      this.engine.reset(false);
+      this.engine.setExtraHud('TIME LEFT', this.formatTime(this.remainingMs));
+    };
+
+    FiveMinuteTrialMode.prototype.update = function(dt) {
+      if (this.engine.state !== 'GAMEOVER' && this.engine.state !== 'IDLE') {
+        this.remainingMs -= dt;
+        this.engine.setExtraHud('TIME LEFT', this.formatTime(this.remainingMs));
+        if (this.remainingMs <= 0) {
+          this.remainingMs = 0;
+          this.engine.state = 'GAMEOVER';
+          this.engine.activePiece = null;
+          SFX.win();
+          this.engine.showOverlay('TIME UP!', `Final Score: ${this.engine.score.toLocaleString()} | Max Chain: ${this.engine.maxChainReached}`);
+          this.appendRestartButton(this.engine.overlayEl);
+        }
+      }
+      this.engine.update(dt);
+    };
+
+    FiveMinuteTrialMode.prototype.render = function() {
+      this.engine.render();
+    };
+
+    FiveMinuteTrialMode.prototype.getControllableEngine = function() {
+      return this.engine;
+    };
+
+    /**
+     * =========================================================================
+     * MODE CONSTRUCTOR 3: EightChainTrialMode
+     * =========================================================================
+     */
+    function EightChainTrialMode(containerDiv) {
+      this.container = containerDiv;
+      this.container.innerHTML = `
+        <div class="arena-wrapper">
+          <div id="chain8-board-slot"></div>
+        </div>
+      `;
+      this.elapsedMs = 0;
+      const boardSlot = this.container.querySelector('#chain8-board-slot');
+      this.engine = new CoreGameEngine(boardSlot, {
+        label: '8-CHAIN TRIAL',
+        dropInterval: 820,
+        onChainComplete: ({ chainCount }) => {
+          if (chainCount >= 8 && this.engine.state !== 'GAMEOVER') {
+            this.engine.state = 'GAMEOVER';
+            this.engine.activePiece = null;
+            SFX.win();
+            this.engine.showOverlay(
+              `${chainCount}-CHAIN CLEAR!`,
+              `Time: ${this.formatStopwatch(this.elapsedMs)} | Score: ${this.engine.score.toLocaleString()}`
+            );
+            this.appendRestartButton(this.engine.overlayEl);
+          }
+        },
+        onGameOver: () => {
+          this.engine.showOverlay('TOPPED OUT!', `Best Chain: ${this.engine.maxChainReached}/8`);
+          this.appendRestartButton(this.engine.overlayEl);
+        }
+      });
+    }
+
+    EightChainTrialMode.prototype.appendRestartButton = function(parent) {
+      const existing = parent.querySelector('.restart-btn');
+      if (existing) existing.remove();
+      const btn = document.createElement('button');
+      btn.className = 'primary restart-btn';
+      btn.textContent = 'Retry 8-Chain';
+      btn.onclick = () => this.start();
+      parent.appendChild(btn);
+    };
+
+    EightChainTrialMode.prototype.formatStopwatch = function(ms) {
+      const totalSec = ms / 1000;
+      const mins = Math.floor(totalSec / 60);
+      const secs = (totalSec % 60).toFixed(2).padStart(5, '0');
+      return `${mins}:${secs}`;
+    };
+
+    EightChainTrialMode.prototype.start = function() {
+      this.elapsedMs = 0;
+      this.engine.reset(false);
+      this.engine.setExtraHud('STOPWATCH', '0:00.00');
+    };
+
+    EightChainTrialMode.prototype.update = function(dt) {
+      if (this.engine.state !== 'GAMEOVER' && this.engine.state !== 'IDLE') {
+        this.elapsedMs += dt;
+        this.engine.setExtraHud('STOPWATCH', this.formatStopwatch(this.elapsedMs));
+      }
+      this.engine.update(dt);
+    };
+
+    EightChainTrialMode.prototype.render = function() {
+      this.engine.render();
+    };
+
+    EightChainTrialMode.prototype.getControllableEngine = function() {
+      return this.engine;
+    };
+
+    /**
+     * =========================================================================
+     * MODE CONSTRUCTOR 4: VsCpuCoursesMode
+     * Manages 4-stage courses with score carry-over, combining CoreGameEngine,
+     * GarbageScaling, and CPUEngine.
+     * =========================================================================
+     */
+    function VsCpuCoursesMode(containerDiv) {
+      this.container = containerDiv;
+      this.container.innerHTML = `
+        <div style="width:100%;text-align:center;margin-bottom:10px;">
+          <span id="course-banner" style="background:#1c243b;border:1px solid #38bdf8;padding:6px 16px;border-radius:20px;font-weight:800;font-size:0.9rem;">
+            COURSE 1 - STAGE 1/4
+          </span>
+        </div>
+        <div class="arena-wrapper">
+          <div id="vscpu-player-slot"></div>
+          <div id="vscpu-ai-slot"></div>
+        </div>
+      `;
+
+      this.bannerEl = this.container.querySelector('#course-banner');
+      this.currentCourse = COURSE_DEFINITIONS[0];
+      this.stageIndex = 0;
+      this.carriedPlayerScore = 0;
+      this.matchFinished = false;
+
+      // Instantiate dedicated GarbageScaling & CoreGameEngines
+      this.garbageSystem = new GarbageScaling();
+
+      this.playerEngine = new CoreGameEngine(this.container.querySelector('#vscpu-player-slot'), {
+        label: 'PLAYER',
+        cellSize: 31,
+        dropInterval: 820,
+        onChainComplete: ({ chainCount }) => {
+          if (chainCount > 0 && !this.matchFinished) {
+            this.garbageSystem.sendAttack('PLAYER', chainCount, this.playerEngine, this.cpuEngine);
+          }
+        },
+        onGameOver: () => this.handleRoundEnd('CPU')
+      });
+
+      this.cpuEngine = new CoreGameEngine(this.container.querySelector('#vscpu-ai-slot'), {
+        label: 'CPU',
+        cellSize: 31,
+        isCPU: true,
+        dropInterval: 820,
+        onPieceSpawned: (piece) => {
+          if (this.cpuAI) this.cpuAI.onNewPiece(piece);
+        },
+        onChainComplete: ({ chainCount }) => {
+          if (chainCount >= 2 && this.cpuAI) {
+            this.cpuAI.hasFiredTwoChain = true;
+          }
+          if (chainCount > 0 && !this.matchFinished) {
+            this.garbageSystem.sendAttack('CPU', chainCount, this.playerEngine, this.cpuEngine);
+          }
+        },
+        onGameOver: () => this.handleRoundEnd('PLAYER')
+      });
+
+      this.playerEngine.pendingGarbageRef = this.garbageSystem;
+      this.cpuEngine.pendingGarbageRef = this.garbageSystem;
+
+      // Instantiate CPUEngine with reference to playerEngine so Course 8 can observe player's board
+      this.cpuAI = new CPUEngine(this.cpuEngine, this.currentCourse.stages[0], this.playerEngine);
+    }
+
+    VsCpuCoursesMode.prototype.startCourse = function(courseId) {
+      this.currentCourse = COURSE_DEFINITIONS.find(c => c.id === courseId) || COURSE_DEFINITIONS[0];
+      this.stageIndex = 3;
+      this.carriedPlayerScore = 0;
+      this.loadStage();
+    };
+
+    VsCpuCoursesMode.prototype.loadStage = function() {
+      const stage = this.currentCourse.stages[this.stageIndex];
+      this.matchFinished = false;
+
+      this.bannerEl.textContent = `${this.currentCourse.title.toUpperCase()} — ${stage.name} (${this.stageIndex + 1}/${this.currentCourse.stages.length})`;
+      this.cpuEngine.container.querySelector('.station-name').textContent = stage.cpuName;
+
+      this.garbageSystem.configure(this.currentCourse.courseScale, stage.stageMult);
+      this.garbageSystem.renderTray(this.playerEngine.garbageTrayEl, 0);
+      this.garbageSystem.renderTray(this.cpuEngine.garbageTrayEl, 0);
+
+      this.cpuAI.setProfile(stage);
+
+      // Carry player's score between stages!
+      this.playerEngine.score = this.carriedPlayerScore;
+      this.playerEngine.reset(true);
+      this.cpuEngine.reset(false);
+    };
+
+    VsCpuCoursesMode.prototype.handleRoundEnd = function(winner) {
+      if (this.matchFinished) return;
+      this.matchFinished = true;
+      this.playerEngine.state = 'GAMEOVER';
+      this.cpuEngine.state = 'GAMEOVER';
+
+      if (winner === 'PLAYER') {
+        SFX.win();
+        this.carriedPlayerScore = this.playerEngine.score;
+        const isLastStage = this.stageIndex >= this.currentCourse.stages.length - 1;
+
+        if (!isLastStage) {
+          this.playerEngine.showOverlay('STAGE CLEAR!', `Carried Score: ${this.carriedPlayerScore.toLocaleString()}`);
+          this.cpuEngine.showOverlay('DEFEATED', 'Advancing to next opponent...');
+          const btn = document.createElement('button');
+          btn.className = 'primary';
+          btn.textContent = 'Next Stage ▶';
+          btn.onclick = () => {
+            this.stageIndex++;
+            this.loadStage();
+          };
+          this.playerEngine.overlayEl.appendChild(btn);
+        } else {
+          this.playerEngine.showOverlay('COURSE COMPLETE!', `Total Course Score: ${this.carriedPlayerScore.toLocaleString()}`);
+          this.cpuEngine.showOverlay('CHAMPION!', `${this.currentCourse.title} Cleared!`);
+          const btn = document.createElement('button');
+          btn.className = 'primary';
+          btn.textContent = 'Replay Course';
+          btn.onclick = () => this.startCourse(this.currentCourse.id);
+          this.playerEngine.overlayEl.appendChild(btn);
+        }
+      } else {
+        SFX.lose();
+        this.playerEngine.showOverlay('DEFEAT!', `Final Score: ${this.playerEngine.score.toLocaleString()}`);
+        this.cpuEngine.showOverlay('WINNER', `${this.currentCourse.stages[this.stageIndex].cpuName} Wins!`);
+        const btn = document.createElement('button');
+        btn.className = 'primary';
+        btn.textContent = 'Retry Course';
+        btn.onclick = () => this.startCourse(this.currentCourse.id);
+        this.playerEngine.overlayEl.appendChild(btn);
+      }
+    };
+
+    VsCpuCoursesMode.prototype.update = function(dt) {
+      this.playerEngine.update(dt);
+      this.cpuEngine.update(dt);
+      if (!this.matchFinished) {
+        this.cpuAI.update(dt);
+      }
+    };
+
+    VsCpuCoursesMode.prototype.render = function() {
+      this.playerEngine.render();
+      this.cpuEngine.render();
+    };
+
+    VsCpuCoursesMode.prototype.getControllableEngine = function() {
+      return this.playerEngine;
+    };
+
+    /**
+     * =========================================================================
+     * APPLICATION CONTROLLER & INPUT DISPATCHER
+     * =========================================================================
+     */
+    (function initApp() {
+      const screens = {
+        menu: document.getElementById('screen-menu'),
+        endless: document.getElementById('mode-endless-container'),
+        trial5: document.getElementById('mode-trial5-container'),
+        chain8: document.getElementById('mode-chain8-container'),
+        vscpu: document.getElementById('mode-vscpu-container')
+      };
+
+      const btnMenu = document.getElementById('btn-menu');
+      const btnSound = document.getElementById('btn-sound');
+      const courseListContainer = document.getElementById('course-list-container');
+
+      // Populate VS CPU Course buttons dynamically
+      COURSE_DEFINITIONS.forEach(course => {
+        const btn = document.createElement('button');
+        btn.className = 'course-btn';
+        btn.innerHTML = `<strong>Course ${course.id}</strong><br><span style="font-size:0.72rem;color:#94a3b8;">${course.title.split(': ')[1]}</span>`;
+        btn.title = course.subtitle;
+        btn.onclick = () => launchVsCpuCourse(course.id);
+        courseListContainer.appendChild(btn);
+      });
+
+      // Instantiate Mode Constructors
+      const modes = {
+        endless: new EndlessMode(screens.endless),
+        trial5: new FiveMinuteTrialMode(screens.trial5),
+        chain8: new EightChainTrialMode(screens.chain8),
+        vscpu: new VsCpuCoursesMode(screens.vscpu)
+      };
+
+      let activeModeKey = null;
+
+      function switchScreen(key) {
+        Object.values(screens).forEach(el => el.classList.remove('active'));
+        screens[key].classList.add('active');
+        activeModeKey = key === 'menu' ? null : key;
+        btnMenu.style.display = key === 'menu' ? 'none' : 'inline-block';
+      }
+
+      function launchMode(modeKey) {
+        switchScreen(modeKey);
+        modes[modeKey].start();
+      }
+
+      function launchVsCpuCourse(courseId) {
+        switchScreen('vscpu');
+        modes.vscpu.startCourse(courseId);
+      }
+
+      // Bind menu mode buttons
+      document.querySelectorAll('[data-start-mode]').forEach(btn => {
+        btn.addEventListener('click', () => launchMode(btn.getAttribute('data-start-mode')));
+      });
+
+      btnMenu.addEventListener('click', () => {
+        switchScreen('menu');
+      });
+
+      btnSound.addEventListener('click', () => {
+        SFX.enabled = !SFX.enabled;
+        btnSound.textContent = SFX.enabled ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+      });
+
+      // Unified Input Handler (Keyboard + Touch)
+      function handleAction(code) {
+        if (!activeModeKey || !modes[activeModeKey]) return;
+        const engine = modes[activeModeKey].getControllableEngine();
+        if (!engine || engine.state !== 'FALLING') return;
+
+        switch (code) {
+          case 'ArrowLeft':
+            engine.moveHorizontal(-1);
+            break;
+          case 'ArrowRight':
+            engine.moveHorizontal(1);
+            break;
+          case 'ArrowDown':
+            engine.softDrop();
+            break;
+          case 'Space':
+            engine.hardDrop();
+            break;
+          case 'KeyZ':
+            engine.rotate(1); // CW
+            break;
+          case 'KeyX':
+            engine.rotate(-1); // CCW
+            break;
+          case 'KeyC':
+            engine.rotate(2); // 180 degrees
+            break;
+        }
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'Space', 'KeyZ', 'KeyX', 'KeyC'].includes(e.code)) {
+          if (activeModeKey) e.preventDefault();
+          handleAction(e.code);
+        }
+      });
+
+      document.querySelectorAll('.touch-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          handleAction(btn.getAttribute('data-key'));
+        });
+      });
+
+      // Main 60FPS Animation Loop
+      let lastTime = performance.now();
+      function gameLoop(now) {
+        const dt = Math.min(now - lastTime, 100);
+        lastTime = now;
+
+        if (activeModeKey && modes[activeModeKey]) {
+          modes[activeModeKey].update(dt);
+          modes[activeModeKey].render();
+        }
+        requestAnimationFrame(gameLoop);
+      }
+
+      requestAnimationFrame(gameLoop);
+    })();
+  </script>
+</body>
+</html>
