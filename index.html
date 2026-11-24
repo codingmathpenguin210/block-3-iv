@@ -2536,7 +2536,7 @@ const COURSE_DEFINITIONS = [
 
     VsCpuCoursesMode.prototype.startCourse = function(courseId) {
       this.currentCourse = COURSE_DEFINITIONS.find(c => c.id === courseId) || COURSE_DEFINITIONS[0];
-      this.stageIndex = 3;
+      this.stageIndex = 0;
       this.carriedPlayerScore = 0;
       this.loadStage();
     };
